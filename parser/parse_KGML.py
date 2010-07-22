@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 
-import xml.etree.cElementTree as ET
-import networkx
-import logging
-import pylab
+""" 
+	Author: Eric Xu, Washington University
+		Nov. 2009
 
-from KeggPathway import * 
+	Inspired by pyKegg package
+	kudos to the original author 
+"""
+
+
+import xml.etree.cElementTree as ET
+import pylab
 
 def KGML2Graph(xmlfile, filter_by = ()):
     
