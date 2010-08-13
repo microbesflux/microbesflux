@@ -553,7 +553,7 @@ public class DFBA implements EntryPoint {
 		vp.add(h_model);
 		vp.add(h_optimize);
 		vp.add(h_result);
-		vp.add(lbl);
+		//vp.add(lbl);
 
 		String initToken = History.getToken();
 		if (initToken.length() == 0) {
