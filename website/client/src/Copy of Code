@@ -73,7 +73,7 @@ public class ImageViewer implements EntryPoint {
 	}
 	
 	
-	private static class JSONDS extends DataSource{
+	private static class JSONDS extends XJSONDataSource{
 		private static JSONDS instance = null;
 		
 		private JSONDS(String id)
@@ -93,7 +93,7 @@ public class ImageViewer implements EntryPoint {
 			pathway.setHidden(true);
 			// pathway.setValueMap("")
 			setFields(pkField, ko, reactants, arrow, products, pathway);
-			setDataURL("test.json");			
+			setDataURL("http://www.cse.wustl.edu/~yx2/test.py");			
 		}
 		
 		public static JSONDS getInstance(){
