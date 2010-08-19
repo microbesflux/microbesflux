@@ -1,0 +1,150 @@
+package com.mycompany.project.client;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.DataSourceField;
+import com.smartgwt.client.data.XJSONDataSource;
+import com.smartgwt.client.data.fields.DataSourceIntegerField;
+import com.smartgwt.client.data.fields.DataSourceTextField;
+import com.smartgwt.client.types.DSDataFormat;
+import com.smartgwt.client.types.FieldType;
+import com.smartgwt.client.types.RPCTransport;
+import com.smartgwt.client.types.SelectionAppearance;
+import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.grid.ListGrid;
+import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.tile.events.SelectionChangedEvent;
+import com.smartgwt.client.types.*;
+/**
+ * Entry point classes define <code>onModuleLoad()</code>.
+ */
+public class ImageViewer implements EntryPoint {
+	private Button clickMeButton;
+	public void onModuleLoad() {
+		RootPanel rootPanel = RootPanel.get();
+
+		clickMeButton = new Button();
+		rootPanel.add(clickMeButton);
+		clickMeButton.setText("Click me!");
+		clickMeButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event) {
+				Window.alert("Hello, GWT World!");
+			}
+		});
+		
+		final Label l = new Label();
+		
+		/* Grid */
+		final ListGrid opt = new ListGrid();
+		
+		
+		opt.setWidth(400);
+		opt.setHeight(500);
+		opt.setShowAllRecords(true);
+		opt.setDataSource(JSONDS.getInstance());
+		
+		ListGridField ko = new ListGridField("ko");
+		ListGridField arrow = new ListGridField("arrow");
+		ListGridField reactants = new ListGridField("reactants");
+		ListGridField products = new ListGridField("products");
+		ListGridField pathway = new ListGridField("pathway");
+		pathway.setHidden(true);
+		opt.setFields(ko, reactants, arrow, products, pathway);
+		
+		opt.setAutoFetchData(true);		
+		opt.setGroupStartOpen("all");
+		opt.setGroupByField("pathway");
+		
+		opt.draw();
+		l.setHeight(100);
+		l.setWidth(200);
+		rootPanel.add(l);
+		rootPanel.add(opt);
+		
+	}
+	
+	
+	private static class JSONDS extends DataSource{
+		private static JSONDS instance = null;
+		
+		private JSONDS(String id)
+		{
+			setID(id);
+			setDataFormat(DSDataFormat.JSON);
+			
+			DataSourceIntegerField pkField = new DataSourceIntegerField("pk");
+			pkField.setHidden(true);
+			pkField.setPrimaryKey(true);
+			
+			DataSourceField ko 		  = new DataSourceField("ko", FieldType.BOOLEAN, "KO");
+			DataSourceField reactants = new DataSourceField("reactants", FieldType.TEXT, "Reactants");
+			DataSourceField arrow     = new DataSourceField("arrow", FieldType.TEXT, "Arrow");
+			DataSourceField products  = new DataSourceField("products", FieldType.TEXT, "Products");
+			DataSourceTextField pathway =  new DataSourceTextField("pathway", "Pathway");
+			pathway.setHidden(true);
+			// pathway.setValueMap("")
+			setFields(pkField, ko, reactants, arrow, products, pathway);
+			setDataURL("test.json");			
+		}
+		
+		public static JSONDS getInstance(){
+			if (instance == null) {
+				instance = new JSONDS("optimization");
+				return instance;
+			}
+			else {
+				return instance;
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//
+[
+
+{
+"pk":1,
+"ko":true,
+"reactants":"a+b",
+"arrow":"0",
+"products":"c+d",
+"pathway":"a"
+},
+{
+"pk":2,
+"ko":true,
+"reactants":"a+b",
+"arrow":"0",
+"products":"c+d",
+"pathway":"b"
+},
+{
+"pk":3,
+"ko":false,
+"reactants":"x+y",
+"arrow":"1",
+"products":"v+w",
+"pathway":"a"
+}
+	
+]

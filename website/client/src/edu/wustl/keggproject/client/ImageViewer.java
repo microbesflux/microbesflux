@@ -74,6 +74,7 @@ public class ImageViewer implements EntryPoint {
 		rootPanel.add(suggestBox, 303, 160);
 		suggestBox.setSize("336px", "24px");
 		
+		
 		Label lblKeggBasedFlux = new Label("KEGG Based Flux Analysis (KEB Flux)");
 		rootPanel.add(lblKeggBasedFlux, 131, 49);
 		lblKeggBasedFlux.setStyleName("gwt-Label-F1");
