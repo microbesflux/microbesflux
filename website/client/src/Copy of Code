@@ -6,24 +6,23 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.DataSourceField;
+import com.smartgwt.client.data.RestDataSource;
 import com.smartgwt.client.data.XJSONDataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSDataFormat;
 import com.smartgwt.client.types.FieldType;
 import com.smartgwt.client.types.RPCTransport;
-import com.smartgwt.client.types.SelectionAppearance;
-import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
-import com.smartgwt.client.widgets.grid.events.SelectionEvent;
-import com.smartgwt.client.widgets.tile.events.SelectionChangedEvent;
-import com.smartgwt.client.types.*;
+import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
+import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
+// import com.smartgwt.client.widgets.events.ClickEvent;  
+//import com.smartgwt.client.widgets.events.ClickHandler;  
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -67,20 +66,53 @@ public class ImageViewer implements EntryPoint {
 		opt.draw();
 		l.setHeight(100);
 		l.setWidth(200);
+		
+		
+		final DynamicForm form = new DynamicForm();  
+		form.setIsGroup(true);  
+		form.setGroupTitle("Update");  
+		form.setNumCols(4);  
+		
+		form.setDataSource(JSONDS.getInstance());
+		
+		opt.addRecordClickHandler(new RecordClickHandler() {  
+
+			@Override
+			public void onRecordClick(RecordClickEvent event) {
+				// TODO Auto-generated method stub
+				 form.reset();
+                 form.editSelectedData(opt);  
+			}  
+		});  
+		
 		rootPanel.add(l);
 		rootPanel.add(opt);
+		rootPanel.add(form);
 		
+		IButton button = new IButton("Save");  
+		button.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {  
+		@Override
+		public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+			// TODO Auto-generated method stub
+			form.saveData();
+		}
+		});  
+		rootPanel.add(button);
 	}
 	
 	
-	private static class JSONDS extends XJSONDataSource{
+	private static class JSONDS extends RestDataSource{
 		private static JSONDS instance = null;
 		
 		private JSONDS(String id)
 		{
 			setID(id);
-			setDataFormat(DSDataFormat.JSON);
 			
+			// Cross domain JSON
+			setDataFormat(DSDataFormat.JSON);
+		    setDataTransport(RPCTransport.SCRIPTINCLUDE);
+		    setCallbackParam("callback");
+		    
 			DataSourceIntegerField pkField = new DataSourceIntegerField("pk");
 			pkField.setHidden(true);
 			pkField.setPrimaryKey(true);
@@ -93,7 +125,11 @@ public class ImageViewer implements EntryPoint {
 			pathway.setHidden(true);
 			// pathway.setValueMap("")
 			setFields(pkField, ko, reactants, arrow, products, pathway);
-			setDataURL("http://www.cse.wustl.edu/~yx2/test.py");			
+			
+			setFetchDataURL("http://www.cse.wustl.edu/~yx2/fetch.py");
+			setUpdateDataURL("http://www.cse.wustl.edu/~yx2/update.py");
+			setAddDataURL("http://www.cse.wustl.edu/~yx2/fetch.py");
+			setRemoveDataURL("http://www.cse.wustl.edu/~yx2/fetch.py");
 		}
 		
 		public static JSONDS getInstance(){
@@ -107,44 +143,3 @@ public class ImageViewer implements EntryPoint {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-//
-[
-
-{
-"pk":1,
-"ko":true,
-"reactants":"a+b",
-"arrow":"0",
-"products":"c+d",
-"pathway":"a"
-},
-{
-"pk":2,
-"ko":true,
-"reactants":"a+b",
-"arrow":"0",
-"products":"c+d",
-"pathway":"b"
-},
-{
-"pk":3,
-"ko":false,
-"reactants":"x+y",
-"arrow":"1",
-"products":"v+w",
-"pathway":"a"
-}
-	
-]
