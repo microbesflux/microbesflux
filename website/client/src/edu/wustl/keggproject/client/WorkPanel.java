@@ -90,10 +90,14 @@ public class WorkPanel{
 		
 		final Button buttonSave = new Button();
 		buttonSave.setText("Save");
+		
+		final Button buttonAdd = new Button();
+		buttonAdd.setText("Add");
 
 		pathwayPanel.add(pathwayModule);
 		pathwayPanel.add(form);
 		pathwayPanel.add(buttonSave);
+		pathwayPanel.add(buttonAdd);
 		
 		instance.setRightWidget(pathwayPanel);
 
