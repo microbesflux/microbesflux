@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Side;
@@ -15,6 +16,7 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -23,6 +25,8 @@ import com.smartgwt.client.widgets.tab.TabSet;
 public class WorkPanel{
 	
 	private static HorizontalSplitPanel instance;
+	private static final String baseurl = "http://128.252.160.238:8000/";
+	
 	final Anchor titlePanel_welcome = new Anchor("Welcome", "#");
 	final Anchor titlePanel_genome = new Anchor("Genomic Information", "#");
 	final Anchor titlePanel_pathway = new Anchor("Metabolic Pathways", "#");
@@ -30,6 +34,7 @@ public class WorkPanel{
 	final Anchor titlePanel_result = new Anchor("Result", "#");
 	VerticalPanel titlePanel; 
 	private String id = "det";
+	private int uid = 0;
 	
 	public WorkPanel(){
 		if (instance == null){
@@ -94,10 +99,34 @@ public class WorkPanel{
 		final Button buttonAdd = new Button();
 		buttonAdd.setText("Add");
 
+		buttonAdd.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				ListGridRecord r = new ListGridRecord();
+				r.setAttribute("ko", false);
+				r.setAttribute("reactants", "");
+				r.setAttribute("products", "");
+				r.setAttribute("pathway", "Customer Defined");
+				r.setAttribute("arrow", 0);
+				pathwayModule.addData(r);
+				// pathwayModule.startEditingNew();
+			}
+		});
+		
+		
+		buttonSave.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				form.saveData();
+			}
+		});
+        
+		final HorizontalPanel buttonPanel=new HorizontalPanel();
+		buttonPanel.add(buttonAdd);
+		buttonPanel.add(buttonSave);
+		
+		
 		pathwayPanel.add(pathwayModule);
 		pathwayPanel.add(form);
-		pathwayPanel.add(buttonSave);
-		pathwayPanel.add(buttonAdd);
+		pathwayPanel.add(buttonPanel);
 		
 		instance.setRightWidget(pathwayPanel);
 
@@ -154,7 +183,7 @@ public class WorkPanel{
 		clearRight();
 		ListGrid l = new ListGrid();
 		XJSONDataSource stat = new XJSONDataSource();
-		stat.setDataURL("http://www.cse.wustl.edu/~yx2/stat.py?name="+id);
+		stat.setDataURL(baseurl + "stat/?name="+id);
 
 		DataSourceTextField itemField = new DataSourceTextField("name", "Item");  
 		DataSourceTextField valueField = new DataSourceTextField("value", "Value");  

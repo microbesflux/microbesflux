@@ -36,7 +36,7 @@ public class JSONDS extends RestDataSource{
 		
 		setFetchDataURL("http://www.cse.wustl.edu/~yx2/fetch.py");
 		setUpdateDataURL("http://www.cse.wustl.edu/~yx2/update.py");
-		setAddDataURL("http://www.cse.wustl.edu/~yx2/fetch.py");
+		setAddDataURL("http://www.cse.wustl.edu/~yx2/add.py");
 		setRemoveDataURL("http://www.cse.wustl.edu/~yx2/fetch.py");
 	}
 	
