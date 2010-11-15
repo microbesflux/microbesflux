@@ -11,7 +11,7 @@ import com.smartgwt.client.types.RPCTransport;
 
 public class JSONDS extends RestDataSource{
 	private static JSONDS instance = null;
-	
+	private static String baseurl = "http://128.252.160.238:8000/";
 	private JSONDS(String id)
 	{
 		setID(id);
@@ -34,15 +34,16 @@ public class JSONDS extends RestDataSource{
 		// pathway.setValueMap("")
 		setFields(pkField, ko, reactants, arrow, products, pathway);
 		
-		setFetchDataURL("http://www.cse.wustl.edu/~yx2/fetch.py");
-		setUpdateDataURL("http://www.cse.wustl.edu/~yx2/update.py");
-		setAddDataURL("http://www.cse.wustl.edu/~yx2/add.py");
-		setRemoveDataURL("http://www.cse.wustl.edu/~yx2/fetch.py");
+		// setFetchDataURL("http://www.cse.wustl.edu/~yx2/fetch.py");
+		setFetchDataURL(baseurl + "fetch/");
+		setUpdateDataURL(baseurl + "update/");
+		setAddDataURL(baseurl + "add/");
+		setRemoveDataURL(baseurl + "fetch/"); // not used 
 	}
 	
 	public static JSONDS getInstance(){
 		if (instance == null) {
-			instance = new JSONDS("optimization");
+			instance = new JSONDS("model");
 			return instance;
 		}
 		else {

@@ -2,19 +2,14 @@ package edu.wustl.keggproject.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.wustl.keggproject.client.WorkPanel;
-import com.smartgwt.client.data.XJSONDataSource;
-import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.layout.HStack;
 
 public class TopPanel extends HorizontalPanel{

@@ -58,7 +58,7 @@ public class WorkPanel{
 		clearRight();
 		
 		final ListGrid pathwayModule = new ListGrid();
-		pathwayModule.setWidth(400);
+		pathwayModule.setWidth(700);
 		pathwayModule.setHeight(500);
 		pathwayModule.setShowAllRecords(true);
 		pathwayModule.setDataSource(JSONDS.getInstance());
@@ -193,7 +193,7 @@ public class WorkPanel{
 		l.setShowAllRecords(true);  
 		l.setDataSource(stat);  
 		l.fetchData();
-		l.setSize("200", "500");	
+		l.setSize("600", "500");	
 		instance.setRightWidget(l);		
 	}
 	
@@ -268,7 +268,31 @@ public class WorkPanel{
 		
 	}
 	protected void changeToOptimization() {
-		// TODO Auto-generated method stub
+		clearRight();
+		final ListGrid optimizationModule = new ListGrid();
+		
+		optimizationModule.setWidth(700);
+		optimizationModule.setHeight(500);
+		optimizationModule.setShowAllRecords(true);
+		optimizationModule.setDataSource(OptimizationDS.getInstance());
+		
+		ListGridField right 		= new ListGridField("r");
+		ListGridField symbol 	= new ListGridField("s");
+		ListGridField left = new ListGridField("l");
+		ListGridField type = new ListGridField("t");
+		type.setHidden(true);
+		
+		optimizationModule.setFields(right, symbol, left, type);
+		optimizationModule.setAutoFetchData(true);
+		optimizationModule.setGroupByField("t");
+		
+		final VerticalPanel pathwayPanel=new VerticalPanel();  
+		final HorizontalPanel buttonPanel=new HorizontalPanel();
+		
+		pathwayPanel.add(optimizationModule);
+		pathwayPanel.add(buttonPanel);
+		
+		instance.setRightWidget(pathwayPanel);
 		
 	}
 }
