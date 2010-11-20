@@ -3,6 +3,8 @@ package edu.wustl.keggproject.client;
 import com.smartgwt.client.data.XJSONDataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
@@ -10,6 +12,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.widgets.Label;
@@ -58,75 +62,161 @@ public class WorkPanel{
 		clearRight();
 		
 		final ListGrid pathwayModule = new ListGrid();
-		pathwayModule.setWidth(700);
+		pathwayModule.setWidth(400);
 		pathwayModule.setHeight(500);
 		pathwayModule.setShowAllRecords(true);
 		pathwayModule.setDataSource(JSONDS.getInstance());
 		
 		ListGridField ko = new ListGridField("ko");
+		ListGridField reac = new ListGridField("reaction");
 		ListGridField arrow = new ListGridField("arrow");
 		ListGridField reactants = new ListGridField("reactants");
 		ListGridField products = new ListGridField("products");
 		ListGridField pathway = new ListGridField("pathway");
 		pathway.setHidden(true);
-		pathwayModule.setFields(ko, reactants, arrow, products, pathway);
+		pathwayModule.setFields(ko, reac, reactants, arrow, products, pathway);
 		
 		pathwayModule.setAutoFetchData(true);
 		pathwayModule.setGroupByField("pathway");
+		
+		HorizontalPanel pathwayAndSavePanel = new HorizontalPanel();
+		pathwayAndSavePanel.add(pathwayModule);
+		
+		
 		
 		final VerticalPanel pathwayPanel=new VerticalPanel();
 		
 		final DynamicForm form = new DynamicForm();  
 		
 		// form.setIsGroup(true);  
-		form.setNumCols(4);  
-		
+		form.setNumCols(4);
 		form.setDataSource(JSONDS.getInstance());
+		form.setVisible(false);
 		
+		pathwayAndSavePanel.add(form);
+		
+		final Button buttonSave = new Button();
+		buttonSave.setText("Save");
+	
+		buttonSave.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				form.saveData();
+				form.setVisible(false);
+				buttonSave.setVisible(false);
+			}
+		});
+		
+        pathwayAndSavePanel.add(buttonSave);
+        buttonSave.setVisible(false);
+        
 		pathwayModule.addRecordClickHandler(new RecordClickHandler() {  
 
 			@Override
 			public void onRecordClick(RecordClickEvent event) {
-				// TODO Auto-generated method stub
+				 form.setVisible(true);
+				 buttonSave.setVisible(true);
 				 form.reset();
 	             form.editSelectedData(pathwayModule);  
-			}  
-		});  
+			}
+		});
 		
-		final Button buttonSave = new Button();
-		buttonSave.setText("Save");
+		
+		
+		
+		HorizontalPanel addPanel = new HorizontalPanel();
+		
+		VerticalPanel textPanel = new VerticalPanel();
+		VerticalPanel operationPanel = new VerticalPanel();
+		
+		addPanel.add(textPanel);
+		addPanel.add(operationPanel);
+		
+		final TextBox rbox = new TextBox();
+		final Label ext1 = new Label(".ext");
+		final Label ext2 = new Label(".ext");
+		final TextBox prod = new TextBox();
+		
+		ext1.setVisible(false);
+		ext2.setVisible(false);
+		
+		Label arrowl = new Label("----->");
+		
+		textPanel.add(rbox);
+		textPanel.add(ext1);
+		
+		textPanel.add(arrowl);
+		textPanel.add(prod);
+		textPanel.add(ext2);
+		
+		final ListBox lb = new ListBox();
+		final String pathway_values[] = { "BIOMASS", "Inflow", "Outflow", "Heterogeneous Pathways"};
+		
+		lb.addItem("BIOMASS");
+		lb.addItem("Inflow");
+		lb.addItem("Outflow");
+		lb.addItem("Heterogeneous Pathways");
+		
+		lb.addChangeHandler(new ChangeHandler() {
+			public void onChange(ChangeEvent event) {
+				int v = lb.getSelectedIndex();
+				if ( v ==0 ) {
+					prod.setValue("BIOMASS");
+					prod.setEnabled(false);
+					ext1.setVisible(false);
+					ext2.setVisible(false);
+				}
+				else if (v == 1) {
+					prod.setValue("");
+					prod.setEnabled(true);
+					ext1.setVisible(true);
+					ext2.setVisible(false);
+				}
+				else if (v == 2) {
+					prod.setValue("");
+					prod.setEnabled(true);
+					ext2.setVisible(true);
+					ext1.setVisible(false);
+				}
+				else {
+					prod.setValue("");
+					prod.setEnabled(true);
+					ext1.setVisible(false);
+					ext2.setVisible(false);
+				}
+			}
+		}
+		);
 		
 		final Button buttonAdd = new Button();
 		buttonAdd.setText("Add");
-
+		
 		buttonAdd.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
-				ListGridRecord r = new ListGridRecord();
+				ListGridRecord r = new ListGridRecord();			
 				r.setAttribute("ko", false);
-				r.setAttribute("reactants", "");
-				r.setAttribute("products", "");
-				r.setAttribute("pathway", "Customer Defined");
+				r.setAttribute("reactants", rbox.getText());
+				r.setAttribute("products", prod.getText());
+				r.setAttribute("pathway", 	pathway_values[ lb.getSelectedIndex()]);
 				r.setAttribute("arrow", 0);
 				pathwayModule.addData(r);
 				// pathwayModule.startEditingNew();
 			}
 		});
 		
-		
-		buttonSave.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent event){
-				form.saveData();
-			}
-		});
-        
-		final HorizontalPanel buttonPanel=new HorizontalPanel();
-		buttonPanel.add(buttonAdd);
-		buttonPanel.add(buttonSave);
+		operationPanel.add(lb);
+		operationPanel.add(buttonAdd);
 		
 		
-		pathwayPanel.add(pathwayModule);
-		pathwayPanel.add(form);
-		pathwayPanel.add(buttonPanel);
+
+		// final HorizontalPanel buttonPanel=new HorizontalPanel();
+		// buttonPanel.add(buttonAdd);
+		// buttonPanel.add(buttonSave);
+		
+		
+		// pathwayPanel.add(pathwayModule);
+		pathwayPanel.add(pathwayAndSavePanel);
+		// pathwayPanel.add(buttonPanel);
+		pathwayPanel.add(addPanel);
 		
 		instance.setRightWidget(pathwayPanel);
 
