@@ -26,13 +26,14 @@ public class JSONDS extends RestDataSource{
 		pkField.setPrimaryKey(true);
 		
 		DataSourceField ko 		  = new DataSourceField("ko", FieldType.BOOLEAN, "KO");
+		DataSourceField reactionid = new DataSourceField("reactionid", FieldType.TEXT, "Reaction");
 		DataSourceField reactants = new DataSourceField("reactants", FieldType.TEXT, "Reactants");
 		DataSourceField arrow     = new DataSourceField("arrow", FieldType.TEXT, "Arrow");
 		DataSourceField products  = new DataSourceField("products", FieldType.TEXT, "Products");
 		DataSourceTextField pathway =  new DataSourceTextField("pathway", "Pathway");
 		pathway.setHidden(true);
 		// pathway.setValueMap("")
-		setFields(pkField, ko, reactants, arrow, products, pathway);
+		setFields(pkField, ko, reactionid, reactants, arrow, products, pathway);
 		
 		// setFetchDataURL("http://www.cse.wustl.edu/~yx2/fetch.py");
 		setFetchDataURL(baseurl + "fetch/");

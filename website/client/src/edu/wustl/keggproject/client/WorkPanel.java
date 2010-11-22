@@ -1,5 +1,6 @@
 package edu.wustl.keggproject.client;
 
+import com.smartgwt.client.data.SortSpecifier;
 import com.smartgwt.client.data.XJSONDataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
@@ -16,8 +17,10 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.smartgwt.client.types.Side;
+import com.smartgwt.client.types.SortDirection;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -68,17 +71,18 @@ public class WorkPanel{
 		pathwayModule.setDataSource(JSONDS.getInstance());
 		
 		ListGridField ko = new ListGridField("ko");
-		ListGridField reac = new ListGridField("reaction");
+		ListGridField reac = new ListGridField("reactionid");
 		ListGridField arrow = new ListGridField("arrow");
 		ListGridField reactants = new ListGridField("reactants");
 		ListGridField products = new ListGridField("products");
 		ListGridField pathway = new ListGridField("pathway");
 		pathway.setHidden(true);
+		
 		pathwayModule.setFields(ko, reac, reactants, arrow, products, pathway);
 		
 		pathwayModule.setAutoFetchData(true);
+		// pathwayModule.setSortField("pathway");
 		pathwayModule.setGroupByField("pathway");
-		
 		HorizontalPanel pathwayAndSavePanel = new HorizontalPanel();
 		pathwayAndSavePanel.add(pathwayModule);
 		
@@ -116,7 +120,15 @@ public class WorkPanel{
 				 form.setVisible(true);
 				 buttonSave.setVisible(true);
 				 form.reset();
-	             form.editSelectedData(pathwayModule);  
+	             form.editSelectedData(pathwayModule);
+	     		 final FormItem[] formitem = form.getFields();
+	    		 formitem[1].disable();
+	    		 
+	    		 System.out.println(">>>"+pathwayModule.getSelectedRecord().getAttribute("pathway")+"<<<<");
+	    		 if (pathwayModule.getSelectedRecord().getAttribute("pathway").equals("BIOMASS")){
+	    			 System.out.println("Herehehrehrhehre");
+	    			 formitem[4].disable();
+	    		 }
 			}
 		});
 		
@@ -192,13 +204,17 @@ public class WorkPanel{
 		
 		buttonAdd.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
+				
 				ListGridRecord r = new ListGridRecord();			
 				r.setAttribute("ko", false);
 				r.setAttribute("reactants", rbox.getText());
 				r.setAttribute("products", prod.getText());
 				r.setAttribute("pathway", 	pathway_values[ lb.getSelectedIndex()]);
 				r.setAttribute("arrow", 0);
+				// pathwayModule.clearSort();
 				pathwayModule.addData(r);
+				// pathwayModule.groupBy("pathway");
+				// pathwayModule.setSortField("pathway");
 				// pathwayModule.startEditingNew();
 			}
 		});
