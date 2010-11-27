@@ -11,7 +11,7 @@ import com.smartgwt.client.types.RPCTransport;
 
 public class JSONDS extends RestDataSource{
 	private static JSONDS instance = null;
-	private static String baseurl = "http://128.252.160.238:8000/";
+	private static String baseurl = "http://128.252.160.238:8000/pathway/";
 	private JSONDS(String id)
 	{
 		setID(id);

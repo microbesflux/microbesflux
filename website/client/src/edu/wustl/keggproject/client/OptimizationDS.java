@@ -14,7 +14,6 @@ public class OptimizationDS extends RestDataSource{
 	private OptimizationDS(String id)
 	{
 		setID(id);
-		
 		// Cross domain JSON
 		setDataFormat(DSDataFormat.JSON);
 	    setDataTransport(RPCTransport.SCRIPTINCLUDE);

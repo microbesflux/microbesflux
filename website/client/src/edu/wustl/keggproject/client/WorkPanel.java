@@ -29,6 +29,8 @@ import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
+import com.smartgwt.client.util.SC;
+
 public class WorkPanel{
 	
 	private static HorizontalSplitPanel instance;
@@ -86,8 +88,6 @@ public class WorkPanel{
 		HorizontalPanel pathwayAndSavePanel = new HorizontalPanel();
 		pathwayAndSavePanel.add(pathwayModule);
 		
-		
-		
 		final VerticalPanel pathwayPanel=new VerticalPanel();
 		
 		final DynamicForm form = new DynamicForm();  
@@ -107,6 +107,7 @@ public class WorkPanel{
 				form.saveData();
 				form.setVisible(false);
 				buttonSave.setVisible(false);
+				pathwayModule.markForRedraw();
 			}
 		});
 		
@@ -123,12 +124,13 @@ public class WorkPanel{
 	             form.editSelectedData(pathwayModule);
 	     		 final FormItem[] formitem = form.getFields();
 	    		 formitem[1].disable();
-	    		 
+	    		 // formitem[4].disable();
 	    		 System.out.println(">>>"+pathwayModule.getSelectedRecord().getAttribute("pathway")+"<<<<");
 	    		 if (pathwayModule.getSelectedRecord().getAttribute("pathway").equals("BIOMASS")){
 	    			 System.out.println("Herehehrehrhehre");
 	    			 formitem[4].disable();
 	    		 }
+	    		 
 			}
 		});
 		
@@ -137,7 +139,7 @@ public class WorkPanel{
 		
 		HorizontalPanel addPanel = new HorizontalPanel();
 		
-		VerticalPanel textPanel = new VerticalPanel();
+		final VerticalPanel textPanel = new VerticalPanel();
 		VerticalPanel operationPanel = new VerticalPanel();
 		
 		addPanel.add(textPanel);
@@ -151,12 +153,16 @@ public class WorkPanel{
 		ext1.setVisible(false);
 		ext2.setVisible(false);
 		
-		Label arrowl = new Label("----->");
+		// Label arrowl = new Label("----->");
+		
+		final ListBox arrow1 = new ListBox();
+		arrow1.addItem("--->");
+		arrow1.addItem("<-->");
 		
 		textPanel.add(rbox);
 		textPanel.add(ext1);
 		
-		textPanel.add(arrowl);
+		textPanel.add(arrow1);
 		textPanel.add(prod);
 		textPanel.add(ext2);
 		
@@ -167,6 +173,8 @@ public class WorkPanel{
 		lb.addItem("Inflow");
 		lb.addItem("Outflow");
 		lb.addItem("Heterogeneous Pathways");
+		prod.setValue("BIOMASS");
+		prod.setEnabled(false);
 		
 		lb.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent event) {
@@ -176,24 +184,36 @@ public class WorkPanel{
 					prod.setEnabled(false);
 					ext1.setVisible(false);
 					ext2.setVisible(false);
+					arrow1.setSelectedIndex(0);
+					arrow1.setEnabled(false);
+					rbox.setValue("");
 				}
 				else if (v == 1) {
 					prod.setValue("");
 					prod.setEnabled(true);
 					ext1.setVisible(true);
 					ext2.setVisible(false);
+					arrow1.setSelectedIndex(0);
+					arrow1.setEnabled(false);
+					rbox.setValue("");
 				}
 				else if (v == 2) {
 					prod.setValue("");
 					prod.setEnabled(true);
 					ext2.setVisible(true);
 					ext1.setVisible(false);
+					arrow1.setSelectedIndex(0);
+					arrow1.setEnabled(false);
+					rbox.setValue("");
 				}
 				else {
 					prod.setValue("");
 					prod.setEnabled(true);
 					ext1.setVisible(false);
 					ext2.setVisible(false);
+					arrow1.setSelectedIndex(1);
+					arrow1.setEnabled(true);
+					rbox.setValue("");
 				}
 			}
 		}
@@ -205,17 +225,30 @@ public class WorkPanel{
 		buttonAdd.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event){
 				
+//			for(int i=0;i<pathwayModule.getRecords().length;i++){
+//				if(pathwayModule.getRecord(i).getAttribute("pathway").equals("BIOMASS")){
+//					SC.say("Only one reaction is allowed in BIOMASS!");
+//					return;
+//				}
+//			}
+				
+				if (rbox.getText().length() ==0 ) {
+					SC.say("Reactants cannot be empty!");
+					return;
+				}
+				if (prod.getText().length() ==0 ) {
+					SC.say("Products cannot be empty!");
+					return;
+				}
+				
 				ListGridRecord r = new ListGridRecord();			
 				r.setAttribute("ko", false);
 				r.setAttribute("reactants", rbox.getText());
 				r.setAttribute("products", prod.getText());
 				r.setAttribute("pathway", 	pathway_values[ lb.getSelectedIndex()]);
 				r.setAttribute("arrow", 0);
-				// pathwayModule.clearSort();
+				// r.setAttribute(property, value)
 				pathwayModule.addData(r);
-				// pathwayModule.groupBy("pathway");
-				// pathwayModule.setSortField("pathway");
-				// pathwayModule.startEditingNew();
 			}
 		});
 		
@@ -289,7 +322,7 @@ public class WorkPanel{
 		clearRight();
 		ListGrid l = new ListGrid();
 		XJSONDataSource stat = new XJSONDataSource();
-		stat.setDataURL(baseurl + "stat/?name="+id);
+		stat.setDataURL(baseurl + "pathway/stat/?name="+id);
 
 		DataSourceTextField itemField = new DataSourceTextField("name", "Item");  
 		DataSourceTextField valueField = new DataSourceTextField("value", "Value");  
@@ -373,32 +406,79 @@ public class WorkPanel{
 		// TODO Auto-generated method stub
 		
 	}
+	
 	protected void changeToOptimization() {
 		clearRight();
-		final ListGrid optimizationModule = new ListGrid();
 		
+		final ListGrid objectiveList = new ListGrid();
+		
+		/*
 		optimizationModule.setWidth(700);
 		optimizationModule.setHeight(500);
 		optimizationModule.setShowAllRecords(true);
 		optimizationModule.setDataSource(OptimizationDS.getInstance());
 		
-		ListGridField right 		= new ListGridField("r");
+		ListGridField right 	= new ListGridField("r");
 		ListGridField symbol 	= new ListGridField("s");
-		ListGridField left = new ListGridField("l");
-		ListGridField type = new ListGridField("t");
+		ListGridField left 		= new ListGridField("l");
+		ListGridField type 		= new ListGridField("t");
 		type.setHidden(true);
 		
 		optimizationModule.setFields(right, symbol, left, type);
 		optimizationModule.setAutoFetchData(true);
 		optimizationModule.setGroupByField("t");
+		*/
+		objectiveList.setDataSource(ObjectiveDS.getInstance());
+		ListGridField reaction = new ListGridField("r");
+		ListGridField weight   = new ListGridField("w");
+		objectiveList.setFields(reaction, weight);
+		objectiveList.setAutoFetchData(true);
+		objectiveList.setShowResizeBar(true);
 		
-		final VerticalPanel pathwayPanel=new VerticalPanel();  
+		final VerticalPanel modelPanel=new VerticalPanel();  
 		final HorizontalPanel buttonPanel=new HorizontalPanel();
 		
-		pathwayPanel.add(optimizationModule);
-		pathwayPanel.add(buttonPanel);
+		final DynamicForm form = new DynamicForm();  
+		// form.setNumCols(4);
+		form.setDataSource(ObjectiveDS.getInstance());
+		form.setVisible(false);
 		
-		instance.setRightWidget(pathwayPanel);
+		final VerticalPanel objectiveUpdatePanel=new VerticalPanel();  
+		
+		final Button buttonSave = new Button();
+		buttonSave.setText("Save");
+	
+		buttonSave.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event){
+				form.saveData();
+				form.setVisible(false);
+				buttonSave.setVisible(false);
+			}
+		});
+		
+		objectiveUpdatePanel.add(form);
+		objectiveUpdatePanel.add(buttonSave);
+		
+        buttonSave.setVisible(false);
+
+		objectiveList.addRecordClickHandler(new RecordClickHandler() {  
+			@Override
+			public void onRecordClick(RecordClickEvent event) {
+				 form.setVisible(true);
+				 buttonSave.setVisible(true);
+				 form.reset();
+	             form.editSelectedData(objectiveList);
+	     		 final FormItem[] formitem = form.getFields();
+	    		 formitem[0].disable();	    		 
+			}
+		});
+		
+		final HorizontalPanel objectiveModule = new HorizontalPanel();
+		objectiveModule.add(objectiveList);
+		objectiveModule.add(objectiveUpdatePanel);
+		
+		modelPanel.add(objectiveModule);
+		instance.setRightWidget(objectiveModule);
 		
 	}
 }
