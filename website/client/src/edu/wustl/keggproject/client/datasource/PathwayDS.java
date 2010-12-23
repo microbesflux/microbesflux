@@ -1,4 +1,4 @@
-package edu.wustl.keggproject.client;
+package edu.wustl.keggproject.client.datasource;
 
 import com.smartgwt.client.data.DataSourceField;
 import com.smartgwt.client.data.RestDataSource;
@@ -8,10 +8,12 @@ import com.smartgwt.client.types.DSDataFormat;
 import com.smartgwt.client.types.FieldType;
 import com.smartgwt.client.types.RPCTransport;
 
+import edu.wustl.keggproject.client.ResourceSingleton;
+
 
 public class PathwayDS extends RestDataSource{
 	private static PathwayDS instance = null;
-	private static String baseurl = "http://128.252.160.238:8000/pathway/";
+	private static String myurl = ResourceSingleton.getInstace().getBaseURL() + "pathway/";
 	private PathwayDS(String id)
 	{
 		setID(id);
@@ -36,10 +38,10 @@ public class PathwayDS extends RestDataSource{
 		setFields(pkField, ko, reactionid, reactants, arrow, products, pathway);
 		
 		// setFetchDataURL("http://www.cse.wustl.edu/~yx2/fetch.py");
-		setFetchDataURL(baseurl + "fetch/");
-		setUpdateDataURL(baseurl + "update/");
-		setAddDataURL(baseurl + "add/");
-		setRemoveDataURL(baseurl + "fetch/"); // not used 
+		setFetchDataURL(myurl + "fetch/");
+		setUpdateDataURL(myurl + "update/");
+		setAddDataURL(myurl + "add/");
+		setRemoveDataURL(myurl + "fetch/"); // not used 
 	}
 	
 	public static PathwayDS getInstance(){

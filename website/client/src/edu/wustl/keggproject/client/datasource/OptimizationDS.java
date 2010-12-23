@@ -1,4 +1,4 @@
-package edu.wustl.keggproject.client;
+package edu.wustl.keggproject.client.datasource;
 
 import com.smartgwt.client.data.DataSourceField;
 import com.smartgwt.client.data.RestDataSource;
@@ -7,10 +7,12 @@ import com.smartgwt.client.types.DSDataFormat;
 import com.smartgwt.client.types.FieldType;
 import com.smartgwt.client.types.RPCTransport;
 
+import edu.wustl.keggproject.client.ResourceSingleton;
+
 
 public class OptimizationDS extends RestDataSource{
 	private static OptimizationDS instance = null;
-	private static String baseurl = "http://128.252.160.238:8000/";
+	private static String myurl = ResourceSingleton.getInstace().getBaseURL();
 	private OptimizationDS(String id)
 	{
 		setID(id);
@@ -31,7 +33,7 @@ public class OptimizationDS extends RestDataSource{
 		// pathway.setValueMap("")
 		setFields(pkField, rexpr, symbol, lexpr);
 		
-		setFetchDataURL(baseurl + "optfetch/");
+		setFetchDataURL(myurl + "optfetch/");
 	}
 	
 	public static OptimizationDS getInstance(){

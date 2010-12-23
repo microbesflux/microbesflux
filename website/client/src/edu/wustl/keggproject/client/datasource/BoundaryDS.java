@@ -1,22 +1,22 @@
-package edu.wustl.keggproject.client;
+package edu.wustl.keggproject.client.datasource;
 
 import com.smartgwt.client.data.DataSourceField;
 import com.smartgwt.client.data.RestDataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
-import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSDataFormat;
 import com.smartgwt.client.types.FieldType;
 import com.smartgwt.client.types.RPCTransport;
 
+import edu.wustl.keggproject.client.ResourceSingleton;
 
 
 public class BoundaryDS extends RestDataSource {
-	private static BoundaryDS instance = null;
-	private static String baseurl = "http://128.252.160.238:8000/model/bound/";
+	private static BoundaryDS _instance = null;
+	private static String myurl = ResourceSingleton.getInstace().getBaseURL() + "model/bound/";
+	
 	private BoundaryDS(String id)
 	{
-			setID(id);		
-			// Cross domain JSON
+			setID(id);
 			setDataFormat(DSDataFormat.JSON);
 		    setDataTransport(RPCTransport.SCRIPTINCLUDE);
 		    setCallbackParam("callback");
@@ -30,17 +30,17 @@ public class BoundaryDS extends RestDataSource {
 			DataSourceField ub = new DataSourceField("u", FieldType.TEXT, "ub");
 			setFields(pkField, reactionid, lb,ub);
 						
-			setFetchDataURL(baseurl + "fetch/");
-			setUpdateDataURL(baseurl + "update/");
+			setFetchDataURL(myurl + "fetch/");
+			setUpdateDataURL(myurl + "update/");
 		}
 		
 		public static BoundaryDS getInstance(){
-			if (instance == null) {
-				instance = new BoundaryDS("boundary");
-				return instance;
+			if (_instance == null) {
+				_instance = new BoundaryDS("boundary");
+				return _instance;
 			}
 			else {
-				return instance;
+				return _instance;
 			}
 		}
 }	

@@ -1,19 +1,21 @@
-package edu.wustl.keggproject.client;
+package edu.wustl.keggproject.client.datasource;
 
+import edu.wustl.keggproject.client.ResourceSingleton;
 import com.smartgwt.client.data.DataSourceField;
 import com.smartgwt.client.data.RestDataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
-import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSDataFormat;
 import com.smartgwt.client.types.FieldType;
 import com.smartgwt.client.types.RPCTransport;
 
 
 
-public class ConstraintDS extends RestDataSource {
-	private static ConstraintDS instance = null;
-	private static String baseurl = "http://128.252.160.238:8000/model/sv/";
-	private ConstraintDS(String id)
+
+
+public class ObjectiveDS extends RestDataSource {
+	private static ObjectiveDS instance = null;
+	private static String myurl = ResourceSingleton.getInstace().getBaseURL() + "model/objective/";
+	private ObjectiveDS(String id)
 	{
 			setID(id);		
 			// Cross domain JSON
@@ -25,16 +27,17 @@ public class ConstraintDS extends RestDataSource {
 			pkField.setHidden(true);
 			pkField.setPrimaryKey(true);
 			
-			DataSourceField reactionid = new DataSourceField("r", FieldType.TEXT, "Constraints");
-			DataSourceField compound = new DataSourceField("c", FieldType.TEXT, "Compound");
-			setFields(pkField, reactionid, compound);
+			DataSourceField reactionid = new DataSourceField("r", FieldType.TEXT, "Reaction ID");
+			DataSourceField weight = new DataSourceField("w", FieldType.TEXT, "Weight");
+			setFields(pkField, reactionid, weight);
 			
-			setFetchDataURL(baseurl + "fetch/");
-	}
+			setFetchDataURL(myurl + "fetch/");
+			setUpdateDataURL(myurl + "update/");
+		}
 		
-		public static ConstraintDS getInstance(){
+		public static ObjectiveDS getInstance(){
 			if (instance == null) {
-				instance = new ConstraintDS("constraints");
+				instance = new ObjectiveDS("models");
 				return instance;
 			}
 			else {
