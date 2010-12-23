@@ -10,10 +10,10 @@ import com.smartgwt.client.types.RPCTransport;
 
 
 
-public class ObjectiveDS extends RestDataSource {
-	private static ObjectiveDS instance = null;
-	private static String baseurl = "http://128.252.160.238:8000/model/objective/";
-	private ObjectiveDS(String id)
+public class ConstraintDS extends RestDataSource {
+	private static ConstraintDS instance = null;
+	private static String baseurl = "http://128.252.160.238:8000/model/sv/";
+	private ConstraintDS(String id)
 	{
 			setID(id);		
 			// Cross domain JSON
@@ -25,17 +25,16 @@ public class ObjectiveDS extends RestDataSource {
 			pkField.setHidden(true);
 			pkField.setPrimaryKey(true);
 			
-			DataSourceField reactionid = new DataSourceField("r", FieldType.TEXT, "Reaction ID");
-			DataSourceField weight = new DataSourceField("w", FieldType.TEXT, "Weight");
-			setFields(pkField, reactionid, weight);
+			DataSourceField reactionid = new DataSourceField("r", FieldType.TEXT, "Constraints");
+			DataSourceField compound = new DataSourceField("c", FieldType.TEXT, "Compound");
+			setFields(pkField, reactionid, compound);
 			
 			setFetchDataURL(baseurl + "fetch/");
-			setUpdateDataURL(baseurl + "update/");
-		}
+	}
 		
-		public static ObjectiveDS getInstance(){
+		public static ConstraintDS getInstance(){
 			if (instance == null) {
-				instance = new ObjectiveDS("models");
+				instance = new ConstraintDS("constraints");
 				return instance;
 			}
 			else {
