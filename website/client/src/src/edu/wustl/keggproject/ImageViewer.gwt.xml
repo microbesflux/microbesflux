@@ -1,6 +1,0 @@
-<module>
-	<inherits name="com.google.gwt.user.User"/>
-	<inherits name="com.google.gwt.user.theme.standard.Standard"/>
-	<entry-point class="edu.wustl.keggproject.client.ImageViewer"/>
-	<inherits name="com.smartgwt.SmartGwt"/>
-</module>
