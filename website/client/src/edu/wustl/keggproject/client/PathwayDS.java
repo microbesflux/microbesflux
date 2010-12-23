@@ -9,10 +9,10 @@ import com.smartgwt.client.types.FieldType;
 import com.smartgwt.client.types.RPCTransport;
 
 
-public class JSONDS extends RestDataSource{
-	private static JSONDS instance = null;
+public class PathwayDS extends RestDataSource{
+	private static PathwayDS instance = null;
 	private static String baseurl = "http://128.252.160.238:8000/pathway/";
-	private JSONDS(String id)
+	private PathwayDS(String id)
 	{
 		setID(id);
 		
@@ -42,9 +42,9 @@ public class JSONDS extends RestDataSource{
 		setRemoveDataURL(baseurl + "fetch/"); // not used 
 	}
 	
-	public static JSONDS getInstance(){
+	public static PathwayDS getInstance(){
 		if (instance == null) {
-			instance = new JSONDS("model");
+			instance = new PathwayDS("model");
 			return instance;
 		}
 		else {

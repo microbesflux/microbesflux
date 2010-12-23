@@ -588,7 +588,7 @@ public class WorkPanel{
 		pathwayModule.setWidth(400);
 		pathwayModule.setHeight(500);
 		pathwayModule.setShowAllRecords(true);
-		pathwayModule.setDataSource(JSONDS.getInstance());
+		pathwayModule.setDataSource(PathwayDS.getInstance());
 		
 		ListGridField ko = new ListGridField("ko");
 		ListGridField reac = new ListGridField("reactionid");
@@ -612,7 +612,7 @@ public class WorkPanel{
 		
 		// form.setIsGroup(true);  
 		form.setNumCols(4);
-		form.setDataSource(JSONDS.getInstance());
+		form.setDataSource(PathwayDS.getInstance());
 		form.setVisible(false);
 		
 		pathwayAndSavePanel.add(form);
