@@ -63,8 +63,9 @@ public class WorkPanel {
 	private int uid = 0;
 
 	VerticalPanel panel = new VerticalPanel();
-	SuggestBox suggestBox = new BateriaSuggestionBox();
-
+	// SuggestBox suggestBox = new BateriaSuggestionBox();
+	SuggestBox suggestBox = new SuggestBox();
+	
 	public WorkPanel() {
 		if (instance == null) {
 			instance = new HorizontalSplitPanel();
