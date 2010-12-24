@@ -1,0 +1,10 @@
+<project name="KeggSVN">
+	  <target name="deploy" description="Copy source to the output folder">
+	  	
+	  		
+	    <scp todir="eric:morphlotus@128.252.160.238:/home/eric/keggflux/flux/gwt">
+	      <fileset dir="war"/>
+	    </scp>
+	  
+	  </target>
+</project>
