@@ -6,6 +6,4 @@ public class RightPanel {
 	}
 	
 	// Eric
-	
-	public void change
 }
