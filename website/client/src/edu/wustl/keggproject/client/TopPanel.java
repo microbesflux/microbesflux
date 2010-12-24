@@ -77,6 +77,7 @@ public class TopPanel extends HorizontalPanel {
 
 			@Override
 			public void onSubmitComplete(FormSubmitCompleteEvent event) {
+				// Here you can see : login successfully
 				Window.alert(event.getResults());
 			};
 		});
