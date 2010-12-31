@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.widgets.Label;
 
 public class LoginFunctionPanel {
-	public SimplePanel loginFucntionPanel;
+	public SimplePanel loginFucntionPanel = new SimplePanel();
 	
 	public Widget getLoginFunctionPanel(){
 		return loginFucntionPanel;
@@ -44,12 +44,13 @@ public class LoginFunctionPanel {
 		grid.setWidget(1, 1, pbox);
 		grid.setWidget(2, 1, submit);
 		
+		loginFucntionPanel.clear();
 		loginFucntionPanel.setWidget(grid);
 		
 		submit.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				loginForm.submit();
-			}			
+			}
 		});
 		
 		loginForm.addFormHandler(new FormHandler() {
@@ -62,7 +63,7 @@ public class LoginFunctionPanel {
 			public void onSubmitComplete(FormSubmitCompleteEvent event) {
 				String account="";
 				loginFucntionPanel.setWidget(new Label("Welcome, "+account));
-				a.setText("Log Out");//Window.alert(event.getResults()); 
+				a.setText("Log Out");	//Window.alert(event.getResults()); 
 				
 			}
 			;

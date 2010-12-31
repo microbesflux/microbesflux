@@ -2,7 +2,7 @@ package edu.wustl.keggproject.client;
 
 public class ResourceSingleton {
 	private static ResourceSingleton _instance;
-	private String baseurl = "http://128.252.160.238:8080/";
+	private String baseurl = "http://128.252.160.238:8000/";
 
 	protected ResourceSingleton() {
 	}

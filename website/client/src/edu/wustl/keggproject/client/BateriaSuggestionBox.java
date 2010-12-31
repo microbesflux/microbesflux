@@ -2,6 +2,7 @@ package edu.wustl.keggproject.client;
 
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.TextBox;
 
 public class BateriaSuggestionBox extends SuggestBox{
 
@@ -502,7 +503,7 @@ public class BateriaSuggestionBox extends SuggestBox{
 			oracle.add(hints[i] + " " + realname[i]);
 		}
 	}
-	public BateriaSuggestionBox() {
-		super(oracle);
+	public BateriaSuggestionBox(TextBox t) {
+		super(oracle, t);
 	}
 }

@@ -22,17 +22,17 @@ public class LeftPanel {
 		final Anchor saveFileAs = new Anchor("Save model As");
 		newFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				rp.ChangeTonewFile();
+				rp.changeToNewFile();
 			}
 		});
 		loadFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				rp.ChangeToloadFile();
+				rp.changeToLoadFile();
 			}
 		});
 		saveFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				rp.ChangeTosaveFile();
+				rp.changeToSaveFile();
 			}
 		});
 		saveFileAs.addClickHandler(new ClickHandler() {
@@ -51,7 +51,7 @@ public class LeftPanel {
 		final Anchor optimizationInfo = new Anchor("Optimization");
 		genomeInfo.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				rp.ChangeToGenome();
+				rp.changeToGenome();
 			}
 		});
 		pathwayInfo.addClickHandler(new ClickHandler() {
