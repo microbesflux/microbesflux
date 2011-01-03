@@ -1,10 +1,29 @@
 <project name="KeggSVN">
+	
+	  
 	  <target name="deploy" description="Copy source to the output folder">
-	  	
+	  	<tar destfile="deploy.tar.bz2" basedir = "war" compression="bzip2">
+	  	</tar>
 	  		
-	    <scp todir="eric:morphlotus@128.252.160.238:/home/eric/keggflux/flux/gwt">
+	  	<scp todir="eric:morphlotus@128.252.160.238:/home/eric/keggflux/flux/gwt"
+	  		file = "deploy.tar.bz2"
+	  		trust = "true">
+	    </scp>
+	  	
+	  	<sshexec host="128.252.160.238"
+	  		username="eric"
+	  		password="morphlotus"
+	  		command="tar jxf /home/eric/keggflux/flux/gwt/deploy.tar.bz2 -C /home/eric/keggflux/flux/gwt/"
+	  		trust = "true"
+	  	>
+	  	</sshexec>
+	  </target>
+	
+	  <target name="deploytoseas" description="Copy source to the output folder">
+	  	
+	  	<scp todir="xuy:Morphlotus123!@ssh.seas.wustl.edu:/research-www/engineering/tanglab/static"
+	  		trust = "true">
 	      <fileset dir="war"/>
 	    </scp>
-	  
 	  </target>
 </project>

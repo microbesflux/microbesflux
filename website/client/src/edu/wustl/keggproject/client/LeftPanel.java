@@ -10,12 +10,19 @@ import com.google.gwt.user.client.ui.Widget;
 // Xueyang
 public class LeftPanel {
 	private RightPanel rp;
+	private StatusFormPanel sf;
+	
 	public void setRightPanel(RightPanel r) {
 		rp = r;
 	}
-	public Widget getLeftPanel(){
 
-		VerticalPanel filePanel = new VerticalPanel();
+	public void setStatusFormPanel(StatusFormPanel sfp) {
+		sf = sfp;
+	}
+	
+	public Widget getLeftPanel() {
+
+		final VerticalPanel filePanel = new VerticalPanel();
 		final Anchor newFile = new Anchor("New model");
 		final Anchor loadFile = new Anchor("Load model");
 		final Anchor saveFile = new Anchor("Save model");
@@ -25,21 +32,27 @@ public class LeftPanel {
 				rp.changeToNewFile();
 			}
 		});
+
 		loadFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				rp.changeToLoadFile();
+				sf.loadFile();
+				rp.changeToWelcome("You can load a new model. ");
 			}
 		});
+
 		saveFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				rp.changeToSaveFile();
+				sf.saveFile();
 			}
 		});
+		
 		saveFileAs.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				rp.ChangeTosaveFileAs();
+				rp.ChangeToPathway();
+				sf.saveFileAs();
 			}
 		});
+		
 		filePanel.add(newFile);
 		filePanel.add(loadFile);
 		filePanel.add(saveFile);
@@ -67,8 +80,7 @@ public class LeftPanel {
 		functionPanel.add(genomeInfo);
 		functionPanel.add(pathwayInfo);
 		functionPanel.add(optimizationInfo);
-		
-		
+
 		VerticalPanel accountPanel = new VerticalPanel();
 		final Anchor summaryHistory = new Anchor("Summary");
 		final Anchor passwordChange = new Anchor("Change Passwords");
@@ -84,15 +96,14 @@ public class LeftPanel {
 		});
 		accountPanel.add(summaryHistory);
 		accountPanel.add(passwordChange);
-		
+
 		StackPanel leftPanel = new StackPanel();
 		leftPanel.add(filePanel, "Build/Load/Save a Model", false);
 		leftPanel.add(functionPanel, "Pathways & FBA", false);
 		leftPanel.add(accountPanel, "Account Management", false);
-		
+
 		return leftPanel;
 
 	}
-
 
 }

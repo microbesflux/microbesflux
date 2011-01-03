@@ -1,78 +1,65 @@
 package edu.wustl.keggproject.client;
 
-import java.util.Iterator;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormSubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.widgets.HTMLPane;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HStack;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
 public class RightPanel {
 
-	private String current_collection = "";
+	private StatusFormPanel sf;
+	
+	private String tempvalue;
+	
 	VerticalPanel newModelPanel;
 	BateriaSuggestionBox suggestBox;
 	SimplePanel sp = new SimplePanel();
-
+	
 	public void initialize() {
+		// vp.add(status);
+		// vp.add(sp);
 		// this.initializeSuggestionPanel();
+		
 	}
 
+	public void setStatusFormPanel(StatusFormPanel f) {
+		sf = f;
+	}
+	
 	public Widget getRightPanel() {
 		return sp;
 	}
-
+	
 	public void changeToNewFile() {
 
-		// The Form
-
+		
+		sf.clearForm();
+		sf.clearStatus();
+		sf.setStatus("Creating a new model");
+		
 		final FormPanel createForm = new FormPanel();
 		createForm.setAction(ResourceSingleton.getInstace().getBaseURL()
 				+ "collection/create/");
 		createForm.setMethod(FormPanel.METHOD_GET);
-		createForm.addFormHandler(new FormHandler() {
-			@Override
-			public void onSubmit(FormSubmitEvent event) {
-				;
-			}
-
-			@Override
-			public void onSubmitComplete(FormSubmitCompleteEvent event) {
-				// TODO
-				Window.alert("You have created a new pathway!");
-				changeToGenome();
-			};
-		});
 
 		newModelPanel = new VerticalPanel();
 
@@ -80,9 +67,27 @@ public class RightPanel {
 		HorizontalPanel namepanel = new HorizontalPanel();
 		namepanel.add(new Label("Name of the model: "));
 		final TextBox collectionbox = new TextBox();
+		
 		collectionbox.setName("collection_name");
 		namepanel.add(collectionbox);
 
+		createForm.addSubmitHandler(new FormPanel.SubmitHandler() {
+			@Override
+			public void onSubmit(SubmitEvent event) {
+				tempvalue = new String(collectionbox.getValue()); 
+			}
+		});
+		
+		// TODO: debug can not get the current model name 
+		createForm
+		.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+			public void onSubmitComplete(SubmitCompleteEvent event) {
+				ResourceSingleton.getInstace().setCurrentCollection(tempvalue);
+				sf.setStatus(" Current Model: " + ResourceSingleton.getInstace().getCurrentCollection());
+				changeToGenome();
+			}
+		});
+		
 		HorizontalPanel strapanel = new HorizontalPanel();
 		HTMLPane paneLink = new HTMLPane();
 		paneLink.setContents("<a href=\"http://www.genome.jp/kegg/catalog/org_list.html\" target=\"_blank\">Input KEGG Organisms</a>");
@@ -107,7 +112,6 @@ public class RightPanel {
 		Button buttonRun = new Button();
 		buttonRun.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				current_collection = collectionbox.getText();
 				createForm.submit();
 			}
 		});
@@ -124,55 +128,15 @@ public class RightPanel {
 		sp.add(createForm);
 	}
 
-	public void changeToLoadFile() {
-
-	}
-
-	@SuppressWarnings("deprecation")
-	public void changeToSaveFile() {
-		final Label info = new Label("Saving model ....");
-		final Widget p = sp.getWidget();
-		final FormPanel saveForm = new FormPanel();
-		saveForm.setAction(ResourceSingleton.getInstace().getBaseURL()
-				+ "collection/save/");
-		saveForm.setMethod(FormPanel.METHOD_GET);
-		VerticalPanel hiddenPanel = new VerticalPanel();
-		TextBox hiddenbox = new TextBox();
-		hiddenbox.setVisible(false);
-		hiddenbox.setName("collection_name");
-		hiddenbox.setText(current_collection);
-		hiddenPanel.add(hiddenbox);
-		
-		hiddenPanel.add(info);
-		saveForm.add(hiddenPanel);
-		saveForm.addFormHandler(new FormHandler() {
-			@Override
-			public void onSubmit(FormSubmitEvent event) {
-				;
-			}
-
-			@Override
-			public void onSubmitComplete(FormSubmitCompleteEvent event) {
-				Window.alert("Model saved!");
-				
-				// changeToGenome();
-			};
-		});
-		sp.clear();
-		sp.setWidget(saveForm);
-		saveForm.submit();
-	}
-
-	public void ChangeTosaveFileAs() {
-		// TODO
-	}
-
 	public void changeToGenome() {
+		sp.clear();
+		
 		// TODO
 	}
 
 	public void ChangeToPathway() {
 		// TODO
+		sp.clear();
 	}
 
 	public void ChangeToOptimization() {
@@ -180,6 +144,7 @@ public class RightPanel {
 	}
 
 	public void ChangeToSummary() {
+		// Construct a JsonDS, and then put it here
 		// TODO
 	}
 
@@ -187,7 +152,7 @@ public class RightPanel {
 		// TODO
 	}
 
-	public void changeToWelcome() {
+	public void changeToWelcome(String info) {
 		sp.clear();
 
 		final TabSet topTabSet = new TabSet();
@@ -204,17 +169,18 @@ public class RightPanel {
 		final Tab demoTab = new Tab("Demo");
 		final Tab helpTab = new Tab("Help");
 		// Tab module
-		String introductionContent = "Here is what we will input in the Introduciton tab";
+		String introductionContent = info
+				+ " Here is what we will input in the Introduciton tab";
 		String functionContent = "Here is what we will input in the Function tab";
 		String flowchartContent = "Here is what we will input in the Flowchart tab";
 		String demoContent = "Here is what we will input in the Demo tab";
 		String helpContent = "Here is what we will input in the Help tab";
 
-		Label introductionForm = new Label(introductionContent);
-		Label functionForm = new Label(functionContent);
-		Label flowchartForm = new Label(flowchartContent);
-		Label demoForm = new Label(demoContent);
-		Label helpForm = new Label(helpContent);
+		com.smartgwt.client.widgets.Label introductionForm = new com.smartgwt.client.widgets.Label(introductionContent);
+		com.smartgwt.client.widgets.Label functionForm = new com.smartgwt.client.widgets.Label(functionContent);
+		com.smartgwt.client.widgets.Label flowchartForm = new com.smartgwt.client.widgets.Label(flowchartContent);
+		com.smartgwt.client.widgets.Label demoForm = new com.smartgwt.client.widgets.Label(demoContent);
+		com.smartgwt.client.widgets.Label helpForm = new com.smartgwt.client.widgets.Label(helpContent);
 
 		introductionTab.setPane(introductionForm);
 		functionTab.setPane(functionForm);
@@ -230,7 +196,6 @@ public class RightPanel {
 		sp.setWidget(topTabSet);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void ChangeToLogin(final Anchor a) {
 		if (a.getText().equals("[Log Out]")) {
 			Window.alert("In Logout");
@@ -238,17 +203,25 @@ public class RightPanel {
 			logoutForm.setAction(ResourceSingleton.getInstace().getBaseURL()
 					+ "user/logout/");
 			logoutForm.setMethod(FormPanel.METHOD_GET);
-			logoutForm.addFormHandler(new FormHandler() {
-				public void onSubmitComplete(FormSubmitCompleteEvent event) {
-					Window.alert("You have logged out successfully!");
-					changeToWelcome();
-					a.setText("[Log In]"); // Window.alert(event.getResults());
-				}
 
-				public void onSubmit(FormSubmitEvent event) {
+			logoutForm.addSubmitHandler(new FormPanel.SubmitHandler() {
+
+				@Override
+				public void onSubmit(SubmitEvent event) {
 					;
+
 				}
 			});
+
+			logoutForm
+					.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+
+						@Override
+						public void onSubmitComplete(SubmitCompleteEvent event) {
+							changeToWelcome("Thank you, you have logged out. ");
+							a.setText("[Log In]");
+						}
+					});
 			sp.clear();
 			sp.add(logoutForm);
 			logoutForm.submit();
@@ -266,9 +239,10 @@ public class RightPanel {
 
 			Label l = new Label("User name: ");
 			Label p = new Label("Password: ");
-			TextBox ubox = new TextBox();
+			final TextBox ubox = new TextBox();
+			final PasswordTextBox pbox = new PasswordTextBox();
+			
 			ubox.setName("username");
-			PasswordTextBox pbox = new PasswordTextBox();
 			pbox.setName("password");
 			Button submit = new Button("Login");
 			grid.setWidget(0, 0, l);
@@ -281,27 +255,44 @@ public class RightPanel {
 
 				@Override
 				public void onClick(ClickEvent event) {
-					loginForm.submit(); 
-				}
-
-			});
-
-			loginForm.addFormHandler(new FormHandler() {
-
-				@Override
-				public void onSubmit(FormSubmitEvent event) {
-					;
-				}
-
-				@Override
-				public void onSubmitComplete(FormSubmitCompleteEvent event) {
-					if (event.getResults().contains("Successful")) {
-						Window.alert("Login Successfully");
-						changeToWelcome();
+					if (ubox.getText().isEmpty()) {
+						Window.alert("Username can't be empty. ");
+						ubox.setFocus(true);
+						return;
 					}
-					a.setText("[Log Out]");
+					
+					if (pbox.getText().isEmpty()) {
+						Window.alert("Password can't be empty. ");
+						pbox.setFocus(true);
+						return;
+					}
+					loginForm.submit();
+				}
+
+			});
+
+			loginForm.addSubmitHandler(new FormPanel.SubmitHandler() {
+
+				@Override
+				public void onSubmit(SubmitEvent event) {
+					;
+
 				}
 			});
+
+			loginForm
+					.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+
+						@Override
+						public void onSubmitComplete(SubmitCompleteEvent event) {
+							if (event.getResults().contains("Successful")) {
+								changeToWelcome("Welcome, " + ubox.getText());
+								a.setText("[Log Out]");
+							} else {
+								changeToWelcome("You need correct username/password to use this website");
+							}
+						}
+					});
 			sp.clear();
 			sp.add(loginForm);
 
@@ -377,7 +368,6 @@ public class RightPanel {
 		registerPopup.setEnabled(false);
 
 		agreement.addClickHandler(new ClickHandler() {
-			@SuppressWarnings("deprecation")
 			public void onClick(ClickEvent event) {
 				if (agreement.getValue()) {
 					registerPopup.setEnabled(true);
