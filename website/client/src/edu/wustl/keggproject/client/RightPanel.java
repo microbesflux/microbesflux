@@ -74,7 +74,7 @@ public class RightPanel {
 		createForm.addSubmitHandler(new FormPanel.SubmitHandler() {
 			@Override
 			public void onSubmit(SubmitEvent event) {
-				tempvalue = new String(collectionbox.getValue()); 
+				// tempvalue = new String(collectionbox.getValue()); 
 			}
 		});
 		
@@ -112,6 +112,7 @@ public class RightPanel {
 		Button buttonRun = new Button();
 		buttonRun.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				tempvalue = new String(collectionbox.getText());
 				createForm.submit();
 			}
 		});
@@ -228,7 +229,9 @@ public class RightPanel {
 		}
 
 		else {
-
+			
+			final VerticalPanel loginPanel = new VerticalPanel();
+			
 			final FormPanel loginForm = new FormPanel();
 			loginForm.setAction(ResourceSingleton.getInstace().getBaseURL()
 					+ "user/login/");
@@ -249,8 +252,71 @@ public class RightPanel {
 			grid.setWidget(0, 1, ubox);
 			grid.setWidget(1, 0, p);
 			grid.setWidget(1, 1, pbox);
-			grid.setWidget(2, 1, submit);
+			grid.setWidget(2, 0, submit);
+			
+			Button forgot = new Button("Forgot Password?");
+			grid.setWidget(2, 1, forgot);
+			
+			TextBox forgotemail = new TextBox();
+			forgotemail.setName("username_forgot");
+			Label enter = new Label("Enter your email: ");
+			Button retrieve = new Button("Retrieve Password");
+			
+			HorizontalPanel forgotpassword = new HorizontalPanel();
+			forgotpassword.add(enter);
+			forgotpassword.add(forgotemail);
+			forgotpassword.add(retrieve);
+			final FormPanel forgotform = new FormPanel();
+			forgotform.add(forgotpassword);
+			
+			
+			forgotform.setMethod(FormPanel.METHOD_GET);
+			forgotform.setAction(  ResourceSingleton.getInstace().getBaseURL()+"user/retrievepassword/");
+			forgotform.setVisible(false);
+			
+			forgot.addClickHandler(new ClickHandler(){
+				@Override
+				public void onClick(ClickEvent event) {
+					forgotform.setVisible(true);
+				}
+				
+			});
+			
+			retrieve.addClickHandler(new ClickHandler() {
 
+				@Override
+				public void onClick(ClickEvent event) {
+					// TODO Auto-generated method stub
+					forgotform.submit();
+				}
+				
+			});
+			
+			forgotform.addSubmitHandler(new FormPanel.SubmitHandler() {
+
+				@Override
+				public void onSubmit(SubmitEvent event) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
+			
+			forgotform.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+
+				@Override
+				public void onSubmitComplete(SubmitCompleteEvent event) {
+					forgotform.setVisible(false);
+					if (event.getResults().contains("sent")) {
+						forgotform.setVisible(false);
+						Window.alert("Email sent!");
+					}
+					
+				}
+				
+			});
+			
+			
 			submit.addClickHandler(new ClickHandler() {
 
 				@Override
@@ -294,7 +360,9 @@ public class RightPanel {
 						}
 					});
 			sp.clear();
-			sp.add(loginForm);
+			loginPanel.add(loginForm);
+			loginPanel.add(forgotform);
+			sp.add(loginPanel);
 
 		}
 	}
@@ -307,18 +375,23 @@ public class RightPanel {
 		Grid userInformation = new Grid(9, 2);
 		Grid agreementGrid = new Grid(2, 1);
 
-		TextBox emailID = new TextBox();
-		PasswordTextBox txtPassword = new PasswordTextBox();
-		PasswordTextBox confirmPassword = new PasswordTextBox();
+		final TextBox emailID = new TextBox();
+		emailID.setName("username");
+		
+		final PasswordTextBox txtPassword = new PasswordTextBox();
+		final PasswordTextBox confirmPassword = new PasswordTextBox();
 		accountGrid.setWidget(0, 0, new Label("Required in *."));
 		accountGrid.setWidget(1, 0, new Label("Email(ID)*"));
 		accountGrid.setWidget(1, 1, emailID);
 		accountGrid.setWidget(2, 0, new Label("Password*"));
-		accountGrid.setWidget(1, 1, txtPassword);
+		accountGrid.setWidget(2, 1, txtPassword);
 		accountGrid.setWidget(3, 0, new Label("Confirm Password*"));
 		accountGrid.setWidget(3, 1, confirmPassword);
-
+		
+		txtPassword.setName("password");
+		
 		ListBox Title = new ListBox();
+		Title.setName("title");
 		Title.addItem("--Please Select--");
 		Title.addItem("Dr");
 		Title.addItem("Mr");
@@ -329,14 +402,28 @@ public class RightPanel {
 		organizationType.addItem("--Please Select--");
 		organizationType.addItem("Academic");
 		organizationType.addItem("Corporate");
+		organizationType.setName("orgtype");
 
 		TextBox firstName = new TextBox();
+		firstName.setName("firstname");
+		
 		TextBox lastName = new TextBox();
+		lastName.setName("lastname");
+		
 		TextBox department = new TextBox();
+		department.setName("department");
+		
 		TextBox organization = new TextBox();
+		organization.setName("organization");
+		
 		TextBox address1 = new TextBox();
+		address1.setName("address1");
+		
 		TextBox address2 = new TextBox();
+		address2.setName("address2");
+		
 		TextBox country = new TextBox();
+		country.setName("country");
 
 		userInformation.setWidget(0, 0, new Label("Title*"));
 		userInformation.setWidget(0, 1, Title);
@@ -362,9 +449,8 @@ public class RightPanel {
 				.setHTML("I have read and agree to the <a href=\"http://www.genome.jp/kegg/catalog/org_list.html\" target=\"_blank\">Term of Use</a>");
 
 		final Button registerPopup = new Button("Register");
-		// TODO
-		// Submit a form
 
+		
 		registerPopup.setEnabled(false);
 
 		agreement.addClickHandler(new ClickHandler() {
@@ -386,7 +472,51 @@ public class RightPanel {
 		registerPanel.add(agreementGrid);
 
 		sp.clear();
-		sp.add(registerPanel);
+		
+		final FormPanel registerForm = new FormPanel();
+		registerForm.setAction(ResourceSingleton.getInstace().getBaseURL()
+				+ "user/add/");
+		registerForm.setMethod(FormPanel.METHOD_POST);
+		registerForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+			
+			@Override
+			public void onSubmitComplete(SubmitCompleteEvent event) {
+				if (event.getResults().equals("Successfully")) {
+					changeToWelcome("Account registered");
+				}
+			}
+		}
+		);
+		
+		registerForm.addSubmitHandler(new FormPanel.SubmitHandler() {
+
+			@Override
+			public void onSubmit(SubmitEvent event) {
+			
+			}
+			
+		});
+		
+		
+		registerForm.setWidget(registerPanel);
+		registerPopup.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				// TODO check data integrity
+				if (!txtPassword.getText().equals(confirmPassword.getText())) {
+					Window.alert("Please check your passwords.");
+				}
+				if (!emailID.getText().contains("@")) {
+					Window.alert("Invalid email address");
+				}
+				registerForm.submit();
+			}
+			
+		});
+		
+		sp.add(registerForm);
+		
 	}
 
 }

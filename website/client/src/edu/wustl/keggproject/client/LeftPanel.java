@@ -2,6 +2,7 @@ package edu.wustl.keggproject.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -29,20 +30,36 @@ public class LeftPanel {
 		final Anchor saveFileAs = new Anchor("Save model As");
 		newFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				if (ResourceSingleton.getInstace().getCurrentCollection().length() >0)
+				{
+					boolean save = Window.confirm("Do you want to save your current model?");
+					if (save) {
+						sf.saveFile(true);
+					}
+				}
 				rp.changeToNewFile();
 			}
 		});
 
 		loadFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				
+				if (ResourceSingleton.getInstace().getCurrentCollection().length() >0)
+				{
+					boolean save = Window.confirm("Do you want to save your current model?");
+					if (save) {
+						sf.saveFile(true);
+					}
+				}
+				
 				sf.loadFile();
-				rp.changeToWelcome("You can load a new model. ");
+				rp.changeToWelcome("You have loaded a new model. ");
 			}
 		});
 
 		saveFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				sf.saveFile();
+				sf.saveFile(false);
 			}
 		});
 		
