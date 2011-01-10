@@ -31,6 +31,9 @@ public class StatusFormPanel {
 		hp.add(status);
 		hp.add(f);
 	}
+	
+	public void initialize() {
+	}
 
 	public Widget getStatusFormPanel() {
 		return hp;

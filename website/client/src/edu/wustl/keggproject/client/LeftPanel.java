@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class LeftPanel {
 	private RightPanel rp;
 	private StatusFormPanel sf;
+	private AccountManagementPanel am;
 	
 	public void setRightPanel(RightPanel r) {
 		rp = r;
@@ -19,6 +20,10 @@ public class LeftPanel {
 
 	public void setStatusFormPanel(StatusFormPanel sfp) {
 		sf = sfp;
+	}
+	
+	public void setAccountManagementPanel(AccountManagementPanel amp) {
+		am = amp;
 	}
 	
 	public Widget getLeftPanel() {
@@ -103,12 +108,12 @@ public class LeftPanel {
 		final Anchor passwordChange = new Anchor("Change Passwords");
 		summaryHistory.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				rp.ChangeToSummary();
+				am.ChangeToSummary();
 			}
 		});
 		passwordChange.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				rp.ChangeToPasswordChange();
+				am.ChangeToPasswordChange();
 			}
 		});
 		accountPanel.add(summaryHistory);
