@@ -67,9 +67,7 @@ public class AccountManagementPanel {
 		accountManagementPanel.setVisible(true);
 		
 		final FormPanel changePassword = new FormPanel();
-		Grid changePasswordGrid = new Grid(4,2);
-		Label oldPassword = new Label("Old Password");
-		final PasswordTextBox oldPasswordBox = new PasswordTextBox();
+		Grid changePasswordGrid = new Grid(3,2);
 		Label newPassword = new Label("New Password");
 		final PasswordTextBox newPasswordBox = new PasswordTextBox();
 		Label confirmPassword = new Label("Confirm Password");
@@ -77,19 +75,16 @@ public class AccountManagementPanel {
 		Button changeButton = new Button("Change Password");
 		Button cancelButton = new Button("Cancel");
 		
-		oldPasswordBox.setName("oldpassword");
 		newPasswordBox.setName("newpassword");
 		confirmPasswordBox.setName("confirmpassword");
 		
 		
-		changePasswordGrid.setWidget(0, 0, oldPassword);
-		changePasswordGrid.setWidget(0, 1, oldPasswordBox);
-		changePasswordGrid.setWidget(1, 0, newPassword);
-		changePasswordGrid.setWidget(1, 1, newPasswordBox);
-		changePasswordGrid.setWidget(2, 0, confirmPassword);
-		changePasswordGrid.setWidget(2, 1, confirmPasswordBox);
-		changePasswordGrid.setWidget(3, 0, changeButton);
-		changePasswordGrid.setWidget(3, 1, cancelButton);
+		changePasswordGrid.setWidget(0, 0, newPassword);
+		changePasswordGrid.setWidget(0, 1, newPasswordBox);
+		changePasswordGrid.setWidget(1, 0, confirmPassword);
+		changePasswordGrid.setWidget(1, 1, confirmPasswordBox);
+		changePasswordGrid.setWidget(2, 0, changeButton);
+		changePasswordGrid.setWidget(2, 1, cancelButton);
 		
 		changePassword.add(changePasswordGrid);
 		accountManagementPanel.setWidget(changePassword);
@@ -105,10 +100,6 @@ public class AccountManagementPanel {
 				
 				if (!newPasswordBox.getText().equals(confirmPasswordBox.getText())) {
 					Window.alert("Please confirm the new password");
-					return;
-				}
-				if(!oldPasswordBox.getText().equals("")){//TODO
-					Window.alert("Please check the old password");
 					return;
 				}
 				changePassword.submit();
