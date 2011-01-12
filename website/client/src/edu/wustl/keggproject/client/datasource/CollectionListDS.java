@@ -7,11 +7,12 @@ import com.smartgwt.client.types.DSDataFormat;
 import com.smartgwt.client.types.FieldType;
 import com.smartgwt.client.types.RPCTransport;
 
-import edu.wustl.keggproject.client.ResourceSingleton;
+import edu.wustl.keggproject.client.Configuration;
+import edu.wustl.keggproject.client.ConfigurationFactory;
 
 public class CollectionListDS extends RestDataSource {
 	private static CollectionListDS instance = null;
-	private static String baseurl = ResourceSingleton.getInstace().getBaseURL() + "collection/list/";
+	private static String baseurl = ConfigurationFactory.getConfiguration().getBaseURL() + "collection/list/";
 	
 	private CollectionListDS(String id)
 	{

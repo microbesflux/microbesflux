@@ -7,12 +7,13 @@ import com.smartgwt.client.types.DSDataFormat;
 import com.smartgwt.client.types.FieldType;
 import com.smartgwt.client.types.RPCTransport;
 
-import edu.wustl.keggproject.client.ResourceSingleton;
+import edu.wustl.keggproject.client.Configuration;
+import edu.wustl.keggproject.client.ConfigurationFactory;
 
 
 public class OptimizationDS extends RestDataSource{
 	private static OptimizationDS instance = null;
-	private static String myurl = ResourceSingleton.getInstace().getBaseURL();
+	private static String myurl = ConfigurationFactory.getConfiguration().getBaseURL();
 	private OptimizationDS(String id)
 	{
 		setID(id);

@@ -12,7 +12,8 @@ import com.google.gwt.user.client.ui.Widget;
 public class LeftPanel {
 	private RightPanel rp;
 	private StatusFormPanel sf;
-	private AccountManagementPanel am;
+
+//	private AccountManagementPanel am;
 	
 	public void setRightPanel(RightPanel r) {
 		rp = r;
@@ -21,10 +22,10 @@ public class LeftPanel {
 	public void setStatusFormPanel(StatusFormPanel sfp) {
 		sf = sfp;
 	}
-	
-	public void setAccountManagementPanel(AccountManagementPanel amp) {
-		am = amp;
-	}
+
+//	public void setAccountManagementPanel(AccountManagementPanel amp) {
+//		am = amp;
+//	}
 	
 	public Widget getLeftPanel() {
 
@@ -33,11 +34,14 @@ public class LeftPanel {
 		final Anchor loadFile = new Anchor("Load model");
 		final Anchor saveFile = new Anchor("Save model");
 		final Anchor saveFileAs = new Anchor("Save model As");
+		final Configuration conf = ConfigurationFactory.getConfiguration();
+
 		newFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if (ResourceSingleton.getInstace().getCurrentCollection().length() >0)
-				{
-					boolean save = Window.confirm("Do you want to save your current model?");
+
+				if (conf.getCurrentCollection().length() > 0) {
+					boolean save = Window
+							.confirm("Do you want to save your current model?");
 					if (save) {
 						sf.saveFile(true);
 					}
@@ -48,15 +52,15 @@ public class LeftPanel {
 
 		loadFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				
-				if (ResourceSingleton.getInstace().getCurrentCollection().length() >0)
-				{
-					boolean save = Window.confirm("Do you want to save your current model?");
+
+				if (conf.getCurrentCollection().length() > 0) {
+					boolean save = Window
+							.confirm("Do you want to save your current model?");
 					if (save) {
 						sf.saveFile(true);
 					}
 				}
-				
+
 				sf.loadFile();
 				rp.changeToWelcome("You have loaded a new model. ");
 			}
@@ -67,14 +71,14 @@ public class LeftPanel {
 				sf.saveFile(false);
 			}
 		});
-		
+
 		saveFileAs.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				rp.ChangeToPathway();
 				sf.saveFileAs();
 			}
 		});
-		
+
 		filePanel.add(newFile);
 		filePanel.add(loadFile);
 		filePanel.add(saveFile);
@@ -106,16 +110,16 @@ public class LeftPanel {
 		VerticalPanel accountPanel = new VerticalPanel();
 		final Anchor summaryHistory = new Anchor("Summary");
 		final Anchor passwordChange = new Anchor("Change Passwords");
-		summaryHistory.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				am.ChangeToSummary();
-			}
-		});
-		passwordChange.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				am.ChangeToPasswordChange();
-			}
-		});
+//		summaryHistory.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				am.ChangeToSummary();
+//			}
+//		});
+//		passwordChange.addClickHandler(new ClickHandler() {
+//			public void onClick(ClickEvent event) {
+//				am.ChangeToPasswordChange();
+//			}
+//		});
 		accountPanel.add(summaryHistory);
 		accountPanel.add(passwordChange);
 

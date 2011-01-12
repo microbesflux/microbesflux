@@ -58,29 +58,25 @@ public class StatusFormPanel {
 	public void hide() {
 		hp.setHeight("0px");
 	}
-	
+
 	public void loadFile() {
 		clearStatus();
 		clearForm();
-		
+		final Configuration conf = ConfigurationFactory.getConfiguration();
 		RequestBuilder rb = new RequestBuilder(RequestBuilder.GET,
-				ResourceSingleton.getInstace().getBaseURL()
-						+ "collection/list/");
+				conf.getBaseURL() + "collection/list/");
 
 		final ListBox collectionListBox = new ListBox();
 		collectionListBox.setName("collection_name");
 		collectionListBox.setVisible(false);
-		
-		
-		setStatus("Fetching a list of models from server ... ");
 
+		setStatus("Fetching a list of models from server ... ");
 
 		HorizontalPanel loadPanel = new HorizontalPanel();
 		loadPanel.add(collectionListBox);
 		final Button loadButton = new Button("Load");
 		loadButton.setVisible(false);
-		
-		
+
 		class MyCallback implements RequestCallback {
 
 			@Override
@@ -98,22 +94,21 @@ public class StatusFormPanel {
 			public void onError(Request request, Throwable exception) {
 				// TODO Auto-generated method stub
 			}
-			
+
 		}
-			
+
 		try {
 			rb.sendRequest("", new MyCallback());
 		} catch (RequestException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		loadPanel.add(loadButton);
-		
+
 		f.clear();
 		f.setWidget(loadPanel);
-		f.setAction(ResourceSingleton.getInstace().getBaseURL()
-				+ "collection/select/");
+		f.setAction(conf.getBaseURL() + "collection/select/");
 		f.setMethod(FormPanel.METHOD_GET);
 
 		f.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
@@ -121,22 +116,15 @@ public class StatusFormPanel {
 			public void onSubmitComplete(SubmitCompleteEvent event) {
 				if (event.getResults().contains("selected")) {
 					setStatus("Model "
-							+ collectionListBox
-									.getValue(collectionListBox
-											.getSelectedIndex())
-							+ " loaded. ");
-					ResourceSingleton
-							.getInstace()
-							.setCurrentCollection(
-									collectionListBox.getValue(collectionListBox
-											.getSelectedIndex()));
+							+ collectionListBox.getValue(collectionListBox
+									.getSelectedIndex()) + " loaded. ");
+					conf.setCurrentCollection(collectionListBox
+							.getValue(collectionListBox.getSelectedIndex()));
 
 				} else {
 					setStatus("Model "
-							+ collectionListBox
-									.getValue(collectionListBox
-											.getSelectedIndex())
-							+ " is not loaded. ");
+							+ collectionListBox.getValue(collectionListBox
+									.getSelectedIndex()) + " is not loaded. ");
 
 				}
 				clearForm();
@@ -161,30 +149,27 @@ public class StatusFormPanel {
 				f.submit();
 			}
 		});
-		
+
 	}
 
 	public void saveFile(boolean s) {
 		final boolean in_background = s;
-		if (! in_background) {
+		final Configuration conf = ConfigurationFactory.getConfiguration();
+		if (!in_background) {
 			clearStatus();
 			clearForm();
-			
-			setStatus("Saving model: "
-				+ ResourceSingleton.getInstace().getCurrentCollection()
-				+ " ... ");
+
+			setStatus("Saving model: " + conf.getCurrentCollection() + " ... ");
 		}
-		
+
 		RequestBuilder rb = new RequestBuilder(RequestBuilder.GET,
-				ResourceSingleton.getInstace().getBaseURL()
-						+ "collection/save/");
+				conf.getBaseURL() + "collection/save/");
 
 		class MyCallback2 implements RequestCallback {
 
 			@Override
 			public void onResponseReceived(Request request, Response response) {
-				if (response.getText().contains("saved") && ! in_background)
-				{
+				if (response.getText().contains("saved") && !in_background) {
 					setStatus("Model saved");
 				}
 			}
@@ -193,7 +178,7 @@ public class StatusFormPanel {
 			public void onError(Request request, Throwable exception) {
 				// TODO Auto-generated method stub
 			}
-			
+
 		}
 		try {
 			rb.sendRequest("", new MyCallback2());
@@ -207,9 +192,8 @@ public class StatusFormPanel {
 		clearForm();
 		setStatus("Saving current model as: ");
 		f.setVisible(true);
-
-		f.setAction(ResourceSingleton.getInstace().getBaseURL()
-				+ "collection/saveas/");
+		final Configuration conf = ConfigurationFactory.getConfiguration();
+		f.setAction(conf.getBaseURL() + "collection/saveas/");
 		f.setMethod(FormPanel.METHOD_GET);
 
 		final HorizontalPanel saveaspanel = new HorizontalPanel();

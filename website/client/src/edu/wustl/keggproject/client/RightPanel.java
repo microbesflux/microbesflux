@@ -27,38 +27,37 @@ import com.smartgwt.client.widgets.tab.TabSet;
 public class RightPanel {
 
 	private StatusFormPanel sf;
-	
+
 	private String tempvalue;
-	
+
 	VerticalPanel newModelPanel;
 	BateriaSuggestionBox suggestBox;
 	SimplePanel sp = new SimplePanel();
-	
+
 	public void initialize() {
 		// vp.add(status);
 		// vp.add(sp);
 		// this.initializeSuggestionPanel();
-		
+
 	}
 
 	public void setStatusFormPanel(StatusFormPanel f) {
 		sf = f;
 	}
-	
+
 	public Widget getRightPanel() {
 		return sp;
 	}
-	
+
 	public void changeToNewFile() {
 
-		
 		sf.clearForm();
 		sf.clearStatus();
 		sf.setStatus("Creating a new model");
-		
+		final Configuration conf = ConfigurationFactory.getConfiguration();
+
 		final FormPanel createForm = new FormPanel();
-		createForm.setAction(ResourceSingleton.getInstace().getBaseURL()
-				+ "collection/create/");
+		createForm.setAction(conf.getBaseURL() + "collection/create/");
 		createForm.setMethod(FormPanel.METHOD_GET);
 
 		newModelPanel = new VerticalPanel();
@@ -67,27 +66,28 @@ public class RightPanel {
 		HorizontalPanel namepanel = new HorizontalPanel();
 		namepanel.add(new Label("Name of the model: "));
 		final TextBox collectionbox = new TextBox();
-		
+
 		collectionbox.setName("collection_name");
 		namepanel.add(collectionbox);
 
 		createForm.addSubmitHandler(new FormPanel.SubmitHandler() {
 			@Override
 			public void onSubmit(SubmitEvent event) {
-				// tempvalue = new String(collectionbox.getValue()); 
+				// tempvalue = new String(collectionbox.getValue());
 			}
 		});
-		
-		// TODO: debug can not get the current model name 
+
+		// TODO: debug can not get the current model name
 		createForm
-		.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-			public void onSubmitComplete(SubmitCompleteEvent event) {
-				ResourceSingleton.getInstace().setCurrentCollection(tempvalue);
-				sf.setStatus(" Current Model: " + ResourceSingleton.getInstace().getCurrentCollection());
-				changeToGenome();
-			}
-		});
-		
+				.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+					public void onSubmitComplete(SubmitCompleteEvent event) {
+						conf.setCurrentCollection(tempvalue);
+						sf.setStatus(" Current Model: "
+								+ conf.getCurrentCollection());
+						changeToGenome();
+					}
+				});
+
 		HorizontalPanel strapanel = new HorizontalPanel();
 		HTMLPane paneLink = new HTMLPane();
 		paneLink.setContents("<a href=\"http://www.genome.jp/kegg/catalog/org_list.html\" target=\"_blank\">Input KEGG Organisms</a>");
@@ -131,7 +131,7 @@ public class RightPanel {
 
 	public void changeToGenome() {
 		sp.clear();
-		
+
 		// TODO
 	}
 
@@ -177,11 +177,16 @@ public class RightPanel {
 		String demoContent = "Here is what we will input in the Demo tab";
 		String helpContent = "Here is what we will input in the Help tab";
 
-		com.smartgwt.client.widgets.Label introductionForm = new com.smartgwt.client.widgets.Label(introductionContent);
-		com.smartgwt.client.widgets.Label functionForm = new com.smartgwt.client.widgets.Label(functionContent);
-		com.smartgwt.client.widgets.Label flowchartForm = new com.smartgwt.client.widgets.Label(flowchartContent);
-		com.smartgwt.client.widgets.Label demoForm = new com.smartgwt.client.widgets.Label(demoContent);
-		com.smartgwt.client.widgets.Label helpForm = new com.smartgwt.client.widgets.Label(helpContent);
+		com.smartgwt.client.widgets.Label introductionForm = new com.smartgwt.client.widgets.Label(
+				introductionContent);
+		com.smartgwt.client.widgets.Label functionForm = new com.smartgwt.client.widgets.Label(
+				functionContent);
+		com.smartgwt.client.widgets.Label flowchartForm = new com.smartgwt.client.widgets.Label(
+				flowchartContent);
+		com.smartgwt.client.widgets.Label demoForm = new com.smartgwt.client.widgets.Label(
+				demoContent);
+		com.smartgwt.client.widgets.Label helpForm = new com.smartgwt.client.widgets.Label(
+				helpContent);
 
 		introductionTab.setPane(introductionForm);
 		functionTab.setPane(functionForm);
@@ -198,10 +203,11 @@ public class RightPanel {
 	}
 
 	public void ChangeToLogin(final Anchor a) {
+		final Configuration conf = ConfigurationFactory.getConfiguration();
 		if (a.getText().equals("[Log Out]")) {
 			Window.alert("In Logout");
 			final FormPanel logoutForm = new FormPanel();
-			logoutForm.setAction(ResourceSingleton.getInstace().getBaseURL()
+			logoutForm.setAction(conf.getBaseURL()
 					+ "user/logout/");
 			logoutForm.setMethod(FormPanel.METHOD_GET);
 
@@ -229,11 +235,11 @@ public class RightPanel {
 		}
 
 		else {
-			
+
 			final VerticalPanel loginPanel = new VerticalPanel();
-			
+
 			final FormPanel loginForm = new FormPanel();
-			loginForm.setAction(ResourceSingleton.getInstace().getBaseURL()
+			loginForm.setAction(conf.getBaseURL()
 					+ "user/login/");
 			loginForm.setMethod(FormPanel.METHOD_POST);
 
@@ -244,7 +250,7 @@ public class RightPanel {
 			Label p = new Label("Password: ");
 			final TextBox ubox = new TextBox();
 			final PasswordTextBox pbox = new PasswordTextBox();
-			
+
 			ubox.setName("username");
 			pbox.setName("password");
 			Button submit = new Button("Login");
@@ -253,35 +259,35 @@ public class RightPanel {
 			grid.setWidget(1, 0, p);
 			grid.setWidget(1, 1, pbox);
 			grid.setWidget(2, 0, submit);
-			
+
 			Button forgot = new Button("Forgot Password?");
 			grid.setWidget(2, 1, forgot);
-			
+
 			TextBox forgotemail = new TextBox();
 			forgotemail.setName("username_forgot");
 			Label enter = new Label("Enter your email: ");
 			Button retrieve = new Button("Retrieve Password");
-			
+
 			HorizontalPanel forgotpassword = new HorizontalPanel();
 			forgotpassword.add(enter);
 			forgotpassword.add(forgotemail);
 			forgotpassword.add(retrieve);
 			final FormPanel forgotform = new FormPanel();
 			forgotform.add(forgotpassword);
-			
-			
+
 			forgotform.setMethod(FormPanel.METHOD_GET);
-			forgotform.setAction(  ResourceSingleton.getInstace().getBaseURL()+"user/retrievepassword/");
+			forgotform.setAction(conf.getBaseURL()
+					+ "user/retrievepassword/");
 			forgotform.setVisible(false);
-			
-			forgot.addClickHandler(new ClickHandler(){
+
+			forgot.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					forgotform.setVisible(true);
 				}
-				
+
 			});
-			
+
 			retrieve.addClickHandler(new ClickHandler() {
 
 				@Override
@@ -289,34 +295,34 @@ public class RightPanel {
 					// TODO Auto-generated method stub
 					forgotform.submit();
 				}
-				
+
 			});
-			
+
 			forgotform.addSubmitHandler(new FormPanel.SubmitHandler() {
 
 				@Override
 				public void onSubmit(SubmitEvent event) {
 					// TODO Auto-generated method stub
-					
-				}
-				
-			});
-			
-			forgotform.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 
-				@Override
-				public void onSubmitComplete(SubmitCompleteEvent event) {
-					forgotform.setVisible(false);
-					if (event.getResults().contains("sent")) {
-						forgotform.setVisible(false);
-						Window.alert("Email sent!");
-					}
-					
 				}
-				
+
 			});
-			
-			
+
+			forgotform
+					.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+
+						@Override
+						public void onSubmitComplete(SubmitCompleteEvent event) {
+							forgotform.setVisible(false);
+							if (event.getResults().contains("sent")) {
+								forgotform.setVisible(false);
+								Window.alert("Email sent!");
+							}
+
+						}
+
+					});
+
 			submit.addClickHandler(new ClickHandler() {
 
 				@Override
@@ -326,7 +332,7 @@ public class RightPanel {
 						ubox.setFocus(true);
 						return;
 					}
-					
+
 					if (pbox.getText().isEmpty()) {
 						Window.alert("Password can't be empty. ");
 						pbox.setFocus(true);
@@ -377,7 +383,7 @@ public class RightPanel {
 
 		final TextBox emailID = new TextBox();
 		emailID.setName("username");
-		
+
 		final PasswordTextBox txtPassword = new PasswordTextBox();
 		final PasswordTextBox confirmPassword = new PasswordTextBox();
 		accountGrid.setWidget(0, 0, new Label("Required in *."));
@@ -387,9 +393,9 @@ public class RightPanel {
 		accountGrid.setWidget(2, 1, txtPassword);
 		accountGrid.setWidget(3, 0, new Label("Confirm Password*"));
 		accountGrid.setWidget(3, 1, confirmPassword);
-		
+
 		txtPassword.setName("password");
-		
+
 		ListBox Title = new ListBox();
 		Title.setName("title");
 		Title.addItem("--Please Select--");
@@ -406,22 +412,22 @@ public class RightPanel {
 
 		TextBox firstName = new TextBox();
 		firstName.setName("firstname");
-		
+
 		TextBox lastName = new TextBox();
 		lastName.setName("lastname");
-		
+
 		TextBox department = new TextBox();
 		department.setName("department");
-		
+
 		TextBox organization = new TextBox();
 		organization.setName("organization");
-		
+
 		TextBox address1 = new TextBox();
 		address1.setName("address1");
-		
+
 		TextBox address2 = new TextBox();
 		address2.setName("address2");
-		
+
 		TextBox country = new TextBox();
 		country.setName("country");
 
@@ -450,7 +456,6 @@ public class RightPanel {
 
 		final Button registerPopup = new Button("Register");
 
-		
 		registerPopup.setEnabled(false);
 
 		agreement.addClickHandler(new ClickHandler() {
@@ -472,32 +477,32 @@ public class RightPanel {
 		registerPanel.add(agreementGrid);
 
 		sp.clear();
-		
+
 		final FormPanel registerForm = new FormPanel();
-		registerForm.setAction(ResourceSingleton.getInstace().getBaseURL()
+		final Configuration conf = ConfigurationFactory.getConfiguration();
+		registerForm.setAction( conf.getBaseURL()
 				+ "user/add/");
 		registerForm.setMethod(FormPanel.METHOD_POST);
-		registerForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-			
-			@Override
-			public void onSubmitComplete(SubmitCompleteEvent event) {
-				if (event.getResults().equals("Successfully")) {
-					changeToWelcome("Account registered");
-				}
-			}
-		}
-		);
-		
+		registerForm
+				.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+
+					@Override
+					public void onSubmitComplete(SubmitCompleteEvent event) {
+						if (event.getResults().equals("Successfully")) {
+							changeToWelcome("Account registered");
+						}
+					}
+				});
+
 		registerForm.addSubmitHandler(new FormPanel.SubmitHandler() {
 
 			@Override
 			public void onSubmit(SubmitEvent event) {
-			
+
 			}
-			
+
 		});
-		
-		
+
 		registerForm.setWidget(registerPanel);
 		registerPopup.addClickHandler(new ClickHandler() {
 
@@ -512,11 +517,11 @@ public class RightPanel {
 				}
 				registerForm.submit();
 			}
-			
+
 		});
-		
+
 		sp.add(registerForm);
-		
+
 	}
 
 }
