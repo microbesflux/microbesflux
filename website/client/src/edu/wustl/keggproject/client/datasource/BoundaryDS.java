@@ -7,12 +7,13 @@ import com.smartgwt.client.types.DSDataFormat;
 import com.smartgwt.client.types.FieldType;
 import com.smartgwt.client.types.RPCTransport;
 
-import edu.wustl.keggproject.client.ResourceSingleton;
+import edu.wustl.keggproject.client.Configuration;
+import edu.wustl.keggproject.client.ConfigurationFactory;
 
 
 public class BoundaryDS extends RestDataSource {
 	private static BoundaryDS _instance = null;
-	private static String myurl = ResourceSingleton.getInstace().getBaseURL() + "model/bound/";
+	private static String myurl = ConfigurationFactory.getConfiguration().getBaseURL() + "model/bound/";
 	
 	private BoundaryDS(String id)
 	{
