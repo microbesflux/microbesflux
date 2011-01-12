@@ -18,7 +18,7 @@ import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
 import edu.wustl.keggproject.client.datasource.PathwayDS;
-import edu.wustl.keggproject.client.datasource.accountSummaryDS;
+import edu.wustl.keggproject.client.datasource.AccountSummaryDS;
 
 public class AccountManagementPanel {
  
@@ -41,7 +41,7 @@ public class AccountManagementPanel {
 		accountSummary.setWidth(400);
 		accountSummary.setHeight(500);
 		accountSummary.setShowAllRecords(true);
-		accountSummary.setDataSource(accountSummaryDS.getInstance());
+		accountSummary.setDataSource(AccountSummaryDS.getInstance());
 
 		ListGridField date = new ListGridField("date");
 		ListGridField model = new ListGridField("model");

@@ -13,7 +13,7 @@ public class LeftPanel {
 	private RightPanel rp;
 	private StatusFormPanel sf;
 
-//	private AccountManagementPanel am;
+	private AccountManagementPanel am;
 	
 	public void setRightPanel(RightPanel r) {
 		rp = r;
@@ -23,9 +23,9 @@ public class LeftPanel {
 		sf = sfp;
 	}
 
-//	public void setAccountManagementPanel(AccountManagementPanel amp) {
-//		am = amp;
-//	}
+	public void setAccountManagementPanel(AccountManagementPanel amp) {
+		am = amp;
+	}
 	
 	public Widget getLeftPanel() {
 
@@ -110,16 +110,16 @@ public class LeftPanel {
 		VerticalPanel accountPanel = new VerticalPanel();
 		final Anchor summaryHistory = new Anchor("Summary");
 		final Anchor passwordChange = new Anchor("Change Passwords");
-//		summaryHistory.addClickHandler(new ClickHandler() {
-//			public void onClick(ClickEvent event) {
-//				am.ChangeToSummary();
-//			}
-//		});
-//		passwordChange.addClickHandler(new ClickHandler() {
-//			public void onClick(ClickEvent event) {
-//				am.ChangeToPasswordChange();
-//			}
-//		});
+		summaryHistory.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				am.ChangeToSummary();
+			}
+		});
+		passwordChange.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				am.ChangeToPasswordChange();
+			}
+		});
 		accountPanel.add(summaryHistory);
 		accountPanel.add(passwordChange);
 
