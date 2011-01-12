@@ -1,14 +1,13 @@
 package edu.wustl.keggproject.client.datasource;
 
-import edu.wustl.keggproject.client.Configuration;
-import edu.wustl.keggproject.client.ConfigurationFactory;
-
 import com.smartgwt.client.data.DataSourceField;
 import com.smartgwt.client.data.RestDataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.types.DSDataFormat;
 import com.smartgwt.client.types.FieldType;
 import com.smartgwt.client.types.RPCTransport;
+
+import edu.wustl.keggproject.client.ConfigurationFactory;
 
 public class ObjectiveDS extends RestDataSource {
 	private static ObjectiveDS instance = null;

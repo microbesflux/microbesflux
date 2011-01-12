@@ -1,7 +1,5 @@
 package edu.wustl.keggproject.client;
 
-import java.lang.reflect.Constructor;
-
 public class ConfigurationFactory {
 
 	private static Configuration _instance;

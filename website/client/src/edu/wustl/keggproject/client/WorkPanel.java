@@ -1,8 +1,5 @@
 package edu.wustl.keggproject.client;
 
-import com.smartgwt.client.data.XJSONDataSource;
-import com.smartgwt.client.data.fields.DataSourceTextField;
-
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -11,24 +8,19 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormSubmitEvent;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
+import com.smartgwt.client.data.XJSONDataSource;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.Side;
-import com.smartgwt.client.types.SortDirection;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -41,8 +33,6 @@ import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.HStack;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
-
-import com.smartgwt.client.util.SC;
 
 import edu.wustl.keggproject.client.datasource.BoundaryDS;
 import edu.wustl.keggproject.client.datasource.ConstraintDS;
@@ -65,7 +55,7 @@ public class WorkPanel {
 	VerticalPanel panel = new VerticalPanel();
 	// SuggestBox suggestBox = new BateriaSuggestionBox();
 	SuggestBox suggestBox = new SuggestBox();
-	
+
 	public WorkPanel() {
 		if (instance == null) {
 			instance = new HorizontalSplitPanel();

@@ -2,33 +2,21 @@ package edu.wustl.keggproject.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormSubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
-
-import edu.wustl.keggproject.client.WorkPanel;
-import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.layout.HStack;
-
-import edu.wustl.keggproject.client.WorkPanel;
 
 public class TopPanel extends HorizontalPanel {
 
@@ -69,18 +57,23 @@ public class TopPanel extends HorizontalPanel {
 			}
 		});
 
-		loginForm.addFormHandler(new FormHandler() {
-			@Override
-			public void onSubmit(FormSubmitEvent event) {
-				;
-			}
+		loginForm.addSubmitHandler(new FormPanel.SubmitHandler() {
 
 			@Override
-			public void onSubmitComplete(FormSubmitCompleteEvent event) {
-				// Here you can see : login successfully
-				Window.alert(event.getResults());
-			};
+			public void onSubmit(SubmitEvent event) {
+				// TODO Auto-generated method stub
+
+			}
 		});
+
+		loginForm
+				.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+
+					@Override
+					public void onSubmitComplete(SubmitCompleteEvent event) {
+
+					}
+				});
 
 		// hp.add(l);
 		// hp.add(ubox);
@@ -150,16 +143,18 @@ public class TopPanel extends HorizontalPanel {
 		agreement
 				.setHTML("I have read and agree to the <a href=\"http://www.genome.jp/kegg/catalog/org_list.html\" target=\"_blank\">Term of Use</a>");
 
-		ClickListener popupListener = new ClickListener() {
-			public void onClick(Widget sender) {
+		ClickHandler popupListener = new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
 				popup.hide();
+
 			}
 		};
 		final Button registerPopup = new Button("Register", popupListener);
 		registerPopup.setEnabled(false);
 
 		agreement.addClickHandler(new ClickHandler() {
-			@SuppressWarnings("deprecation")
 			public void onClick(ClickEvent event) {
 				if (agreement.getValue()) {
 					registerPopup.setEnabled(true);
@@ -179,12 +174,15 @@ public class TopPanel extends HorizontalPanel {
 		popup.setWidget(registerPanel);
 		//
 		// Add a button to the demo to show the above PopUpPanel
-		ClickListener registerListener = new ClickListener() {
-			public void onClick(Widget sender) {
+		ClickHandler registerHandler = new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
 				popup.center();
 			}
+
 		};
-		Button registerButton = new Button("Register", registerListener);
+
+		Button registerButton = new Button("Register", registerHandler);
 
 		grid.setWidget(0, 0, l);
 		grid.setWidget(0, 1, ubox);
