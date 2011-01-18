@@ -10,12 +10,12 @@ import com.smartgwt.client.types.RPCTransport;
 
 import edu.wustl.keggproject.client.ConfigurationFactory;
 
-public class accountSummaryDS extends RestDataSource {
-	private static accountSummaryDS instance = null;
+public class AccountSummaryDS extends RestDataSource {
+	private static AccountSummaryDS instance = null;
 	private static String myurl = ConfigurationFactory.getConfiguration()
 			.getBaseURL() + "pathway/";
 
-	private accountSummaryDS(String id) {
+	private AccountSummaryDS(String id) {
 		setID(id);
 
 		// Cross domain JSON
@@ -44,9 +44,9 @@ public class accountSummaryDS extends RestDataSource {
 		setRemoveDataURL(myurl + "fetch/"); // TODO
 	}
 
-	public static accountSummaryDS getInstance() {
+	public static AccountSummaryDS getInstance() {
 		if (instance == null) {
-			instance = new accountSummaryDS("model");// TODO
+			instance = new AccountSummaryDS("model");// TODO
 			return instance;
 		} else {
 			return instance;

@@ -62,7 +62,7 @@ public class LeftPanel {
 				}
 
 				sf.loadFile();
-				rp.changeToWelcome("You have loaded a new model. ");
+				rp.changeToWelcome();
 			}
 		});
 

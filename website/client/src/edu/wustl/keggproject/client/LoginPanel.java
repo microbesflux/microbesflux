@@ -21,7 +21,7 @@ public class LoginPanel {
 		final Anchor register = new Anchor("[Register]");
 		welcome.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				rp.changeToWelcome("Welcome! ");
+				rp.changeToWelcome();
 			}
 		});
 		logIn.addClickHandler(new ClickHandler() {
