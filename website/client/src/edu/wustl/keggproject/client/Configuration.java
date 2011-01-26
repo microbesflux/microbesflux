@@ -1,8 +1,11 @@
 package edu.wustl.keggproject.client;
 
 public class Configuration {
-	private String baseurl = "http://128.252.160.238:8000/";
+	// private String baseurl = "http://128.252.160.238:8000/";
 
+	// private String baseurl = "http://127.0.0.1:8000/";
+	private String baseurl = "http://tanglab.engineering.wustl.edu/flux/";
+		
 	public String getBaseURL() {
 		return baseurl;
 	}
@@ -26,7 +29,5 @@ public class Configuration {
 			throw new RuntimeException(
 					"Not suppose to call the constructor that way");
 		}
-		// Not suppose to be called
 	}
-
 }

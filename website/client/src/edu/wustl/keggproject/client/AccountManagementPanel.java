@@ -46,8 +46,9 @@ public class AccountManagementPanel {
 		ListGridField model = new ListGridField("model");
 		ListGridField type = new ListGridField("type");
 		ListGridField status = new ListGridField("status");
+		ListGridField url = new ListGridField("url");
 
-		accountSummary.setFields(date, model, type, status);
+		accountSummary.setFields(date, model, type, status, url);
 		accountSummary.setAutoFetchData(true);
 
 		Button buttonExit = new Button("Exit Summary");
@@ -67,6 +68,11 @@ public class AccountManagementPanel {
 		accountManagementPanel.setVisible(true);
 
 		final FormPanel changePassword = new FormPanel();
+		changePassword.setAction(ConfigurationFactory.getConfiguration()
+				.getBaseURL() + "user/password/change/");
+
+		changePassword.setMethod(FormPanel.METHOD_POST);
+
 		Grid changePasswordGrid = new Grid(3, 2);
 		Label newPassword = new Label("New Password");
 		final PasswordTextBox newPasswordBox = new PasswordTextBox();
@@ -122,7 +128,6 @@ public class AccountManagementPanel {
 			@Override
 			public void onSubmit(SubmitEvent event) {
 				;
-
 			}
 		});
 
@@ -131,7 +136,9 @@ public class AccountManagementPanel {
 
 					@Override
 					public void onSubmitComplete(SubmitCompleteEvent event) {
-						Window.alert("Password changed");
+						if (event.getResults().contains("successfully")) {
+							Window.alert("Password changed");
+						}
 					}
 				});
 	}

@@ -45,8 +45,6 @@ import edu.wustl.keggproject.client.datasource.PathwayDS;
 public class RightPanel {
 
 	private StatusFormPanel sf;
-	private static final String baseurl = "http://128.252.160.238:8000/";
-	private String id = "";
 	private String tempvalue;
 
 	VerticalPanel newModelPanel;
@@ -153,7 +151,8 @@ public class RightPanel {
 		sp.clear();
 		ListGrid l = new ListGrid();
 		XJSONDataSource stat = new XJSONDataSource();
-		stat.setDataURL(baseurl + "pathway/stat/?pathway_name=" + id);
+		Configuration conf = ConfigurationFactory.getConfiguration();
+		stat.setDataURL(conf.getBaseURL() + "pathway/stat/?collection_name=" + conf.getCurrentCollection());
 
 		DataSourceTextField itemField = new DataSourceTextField("name", "Item");
 		DataSourceTextField valueField = new DataSourceTextField("value", "Value");
@@ -549,16 +548,43 @@ public class RightPanel {
 		final Button submitButton = new Button();
 		final Button rundfbaButton = new Button();
 
-		submitButton.setText("Submit FBA Job");
+		submitButton.setText("Submit FBA Jobs sssss");
 		rundfbaButton.setText("Set for Dynamic FBA");
 
 		final HorizontalPanel runbuttonPanel = new HorizontalPanel();
-		runbuttonPanel.add(submitButton);
-		runbuttonPanel.add(rundfbaButton);
 
+		final FormPanel OptimizationForm = new FormPanel();
+		OptimizationForm.setAction(ConfigurationFactory.getConfiguration().getBaseURL()+"model/optimization/");
+		OptimizationForm.setMethod(FormPanel.METHOD_GET);
+		// OptimizationForm.setWidget(submitButton);
+		// OptimizationForm.
+		runbuttonPanel.add(OptimizationForm);
+		runbuttonPanel.add(submitButton);		
+		runbuttonPanel.add(rundfbaButton);
+		
+		
+		OptimizationForm.addSubmitHandler(new FormPanel.SubmitHandler() {
+
+			@Override
+			public void onSubmit(SubmitEvent event) {
+				// TODO Auto-generated method stub
+			}
+			
+		});
+		
+		OptimizationForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+			
+			@Override
+			public void onSubmitComplete(SubmitCompleteEvent event) {
+				Window.alert("Job submitted");
+				// TODO Auto-generated method stub
+			}
+		});
+
+		
 		submitButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				// TODO, submit the file to server
+				OptimizationForm.submit();
 			}
 		});
 
@@ -583,19 +609,9 @@ public class RightPanel {
 
 		fPanel.setEncoding(FormPanel.ENCODING_MULTIPART);
 		fPanel.setMethod(FormPanel.METHOD_POST);
-		fPanel.setAction("http://128.252.160.238:8000/model/upload");
-		// fPanel.setAction(GWT.getModuleBaseURL() + "fileupload");
-
-		// Add a button to upload the file
-
+		fPanel.setAction(ConfigurationFactory.getConfiguration().getBaseURL() + "model/upload/");
+		
 		uploadButton.setText("Upload dFBA Data File");
-		/*
-		 * uploadButton.addClickHandler(new ClickHandler() { public void
-		 * onClick(ClickEvent event) { String filename =
-		 * fileUpload.getFilename(); if (filename.length() == 0) {
-		 * Window.alert("You must select a file to upload"); } else {
-		 * fPanel.submit(); Window.alert("File uploaded"); } } });
-		 */
 		uploadButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				fPanel.submit();
@@ -692,7 +708,10 @@ public class RightPanel {
 
 	public void ChangeToLogin(final Anchor a) {
 		final Configuration conf = ConfigurationFactory.getConfiguration();
+		
 		if (a.getText().equals("[Log Out]")) {
+			sf.clearForm();
+			sf.clearStatus();
 			Window.alert("In Logout");
 			final FormPanel logoutForm = new FormPanel();
 			logoutForm.setAction(conf.getBaseURL()
@@ -723,12 +742,15 @@ public class RightPanel {
 		}
 
 		else {
-
+			sf.clearForm();
+			sf.clearStatus();
+			
 			final VerticalPanel loginPanel = new VerticalPanel();
 
 			final FormPanel loginForm = new FormPanel();
 			loginForm.setAction(conf.getBaseURL()
 					+ "user/login/");
+			
 			loginForm.setMethod(FormPanel.METHOD_POST);
 
 			final Grid grid = new Grid(3, 2);
@@ -765,7 +787,7 @@ public class RightPanel {
 
 			forgotform.setMethod(FormPanel.METHOD_GET);
 			forgotform.setAction(conf.getBaseURL()
-					+ "user/retrievepassword/");
+					+ "user/password/retrieve/");
 			forgotform.setVisible(false);
 
 			forgot.addClickHandler(new ClickHandler() {
@@ -780,7 +802,6 @@ public class RightPanel {
 
 				@Override
 				public void onClick(ClickEvent event) {
-					// TODO Auto-generated method stub
 					forgotform.submit();
 				}
 
@@ -976,7 +997,7 @@ public class RightPanel {
 
 					@Override
 					public void onSubmitComplete(SubmitCompleteEvent event) {
-						if (event.getResults().equals("Successfully")) {
+						if (event.getResults().contains("Successfully")) {
 							changeToWelcome();
 						}
 					}

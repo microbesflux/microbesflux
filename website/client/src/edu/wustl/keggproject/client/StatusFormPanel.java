@@ -32,6 +32,12 @@ public class StatusFormPanel {
 	
 	public void initialize() {
 	}
+	
+	public void clearAll() {
+		hp.clear();
+		status.setText("");
+		f.clear();
+	}
 
 	public Widget getStatusFormPanel() {
 		return hp;
@@ -98,7 +104,6 @@ public class StatusFormPanel {
 		try {
 			rb.sendRequest("", new MyCallback());
 		} catch (RequestException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

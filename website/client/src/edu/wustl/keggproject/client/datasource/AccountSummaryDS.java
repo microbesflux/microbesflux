@@ -13,7 +13,7 @@ import edu.wustl.keggproject.client.ConfigurationFactory;
 public class AccountSummaryDS extends RestDataSource {
 	private static AccountSummaryDS instance = null;
 	private static String myurl = ConfigurationFactory.getConfiguration()
-			.getBaseURL() + "pathway/";
+	.getBaseURL() + "user/summary/";
 
 	private AccountSummaryDS(String id) {
 		setID(id);
@@ -35,18 +35,18 @@ public class AccountSummaryDS extends RestDataSource {
 				"Type");
 		DataSourceField status = new DataSourceField("status", FieldType.TEXT,
 				"Status");
-
-		setFields(pkField, date, model, type, status);
-
+		
+		DataSourceField url = new DataSourceField("url", FieldType.LINK,
+		"URL");
+		
+		setFields(pkField, date, model, type, status, url);
+		
 		setFetchDataURL(myurl + "fetch/"); // TODO
-		setUpdateDataURL(myurl + "update/");// TODO
-		setAddDataURL(myurl + "add/");// TODO
-		setRemoveDataURL(myurl + "fetch/"); // TODO
 	}
 
 	public static AccountSummaryDS getInstance() {
 		if (instance == null) {
-			instance = new AccountSummaryDS("model");// TODO
+			instance = new AccountSummaryDS("summary_model");// TODO
 			return instance;
 		} else {
 			return instance;

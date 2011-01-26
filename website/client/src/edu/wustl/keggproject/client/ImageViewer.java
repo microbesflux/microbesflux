@@ -50,11 +50,5 @@ public class ImageViewer implements EntryPoint {
 		fullpanel.add(lower);
 		rootPanel.add(fullpanel, 0, 0);
 
-		// WorkPanel workPanel = new WorkPanel();
-		// workPanel.initialize();
-		// TopPanel tp = new TopPanel(workPanel);c
-		// rootPanel.add(tp, 0, 0);
-		// rootPanel.add(workPanel.getPanel(), 0, 150);
-		// tp.setWorkPanel(workPanel);
 	}
 }
