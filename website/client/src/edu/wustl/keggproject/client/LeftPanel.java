@@ -38,7 +38,6 @@ public class LeftPanel {
 
 		newFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-
 				if (conf.getCurrentCollection().length() > 0) {
 					boolean save = Window
 							.confirm("Do you want to save your current model?");
@@ -53,6 +52,11 @@ public class LeftPanel {
 		loadFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
+				if (conf.getLogin() == false) {
+					Window.alert("You have to login first to load existing models");
+					return;
+				}
+				
 				if (conf.getCurrentCollection().length() > 0) {
 					boolean save = Window
 							.confirm("Do you want to save your current model?");
@@ -68,13 +72,23 @@ public class LeftPanel {
 
 		saveFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				if (conf.getLogin() == false) {
+					Window.alert("You have to login first to save existing models");
+					return;
+				}
+				
 				sf.saveFile(false);
 			}
 		});
 
 		saveFileAs.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				rp.ChangeToPathway();
+				if (conf.getLogin() == false) {
+					Window.alert("You have to login first to save existing models");
+					return;
+				}
+				
+				// rp.ChangeToPathway();
 				sf.saveFileAs();
 			}
 		});
