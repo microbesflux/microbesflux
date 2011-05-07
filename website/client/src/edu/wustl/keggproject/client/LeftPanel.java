@@ -39,10 +39,10 @@ public class LeftPanel {
 		newFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (conf.getCurrentCollection().length() > 0) {
-					boolean save = Window
-							.confirm("Do you want to save your current model?");
-					if (save) {
-						sf.saveFile(true);
+					boolean proceed = Window
+						.confirm("You are about to create a new model. Make sure to save all changes (if any) to your current model. Do you want to proceed? ");
+					if (!proceed) {
+							return;
 					}
 				}
 				rp.changeToNewFile();
@@ -58,13 +58,13 @@ public class LeftPanel {
 				}
 				
 				if (conf.getCurrentCollection().length() > 0) {
-					boolean save = Window
-							.confirm("Do you want to save your current model?");
-					if (save) {
-						sf.saveFile(true);
+					boolean proceed = Window
+							.confirm("You are about to load a new model. Changes to the current model will be discarded unless you click \"Save Model\" first. Do you want to proceed? ");
+					if (!proceed) {
+						return;
 					}
 				}
-
+				
 				sf.loadFile();
 				rp.changeToWelcome();
 			}
@@ -126,14 +126,25 @@ public class LeftPanel {
 		final Anchor passwordChange = new Anchor("Change Passwords");
 		summaryHistory.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				if (conf.getLogin() == false) {
+					Window.alert("You have to login first to view your usage summary.");
+					return;
+				}
+				
 				am.ChangeToSummary();
 			}
 		});
 		passwordChange.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				if (conf.getLogin() == false) {
+					Window.alert("You have to login first to change your password.");
+					return;
+				}
+				
 				am.ChangeToPasswordChange();
 			}
 		});
+		
 		accountPanel.add(summaryHistory);
 		accountPanel.add(passwordChange);
 
@@ -143,7 +154,5 @@ public class LeftPanel {
 		leftPanel.add(accountPanel, "Account Management", false);
 
 		return leftPanel;
-
 	}
-
 }

@@ -46,6 +46,7 @@ public class RightPanel {
 
 	private StatusFormPanel sf;
 	private String tempvalue;
+	private String tempemail;
 
 	VerticalPanel newModelPanel;
 	BateriaSuggestionBox suggestBox;
@@ -78,35 +79,15 @@ public class RightPanel {
 		createForm.setAction(conf.getBaseURL() + "collection/create/");
 		createForm.setMethod(FormPanel.METHOD_GET);
 
-		newModelPanel = new VerticalPanel();
-
-		// Part 1
-		HorizontalPanel namepanel = new HorizontalPanel();
-		namepanel.add(new Label("Name of the model: "));
 		final TextBox collectionbox = new TextBox();
-
 		collectionbox.setName("collection_name");
-		namepanel.add(collectionbox);
+		
+		final TextBox emailbox = new TextBox();
+		emailbox.setName("email");
+		
+		
 
-		createForm.addSubmitHandler(new FormPanel.SubmitHandler() {
-			@Override
-			public void onSubmit(SubmitEvent event) {
-				// tempvalue = new String(collectionbox.getValue());
-			}
-		});
-
-		// TODO: debug can not get the current model name
-		createForm
-				.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-					public void onSubmitComplete(SubmitCompleteEvent event) {
-						conf.setCurrentCollection(tempvalue);
-						sf.setStatus(" Current Model: "
-								+ conf.getCurrentCollection());
-						changeToGenome();
-					}
-				});
-
-		HorizontalPanel strapanel = new HorizontalPanel();
+		// HorizontalPanel strapanel = new HorizontalPanel();
 		HTMLPane paneLink = new HTMLPane();
 		paneLink.setContents("<a href=\"http://www.genome.jp/kegg/catalog/org_list.html\" target=\"_blank\">Input KEGG Organisms</a>");
 		paneLink.setPosition("Center");
@@ -124,24 +105,66 @@ public class RightPanel {
 		suggestBox.setText("");
 		suggestBox.setSize("200px", "20px");
 
-		strapanel.add(layoutpaneLink);
-		strapanel.add(suggestBox);
+		// strapanel.add(layoutpaneLink);
+		// strapanel.add(suggestBox);
 
 		Button buttonRun = new Button();
 		buttonRun.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				tempvalue = new String(collectionbox.getText());
+				tempemail = new String(emailbox.getText());
+				if (tempemail.length()==0) {
+					Window.alert("Please Enter a Valid Email Address");
+					return;
+				}
+				
+				if (!tempemail.contains("@")) {
+					Window.alert("Invalid email address");
+					return;
+				}
+				
 				createForm.submit();
 			}
 		});
 		buttonRun.setText("Run");
 		buttonRun.setSize("60px", "30px");
+		
+		Grid newModelGrid = new Grid(4, 2);
+		
+		newModelGrid.setWidget(0, 0, new Label("Name of the model: "));
+		newModelGrid.setWidget(0, 1, collectionbox);
+		
+		newModelGrid.setWidget(1, 0, new Label("Your Email Address: "));
+		newModelGrid.setWidget(1, 1, emailbox);
+		
+		newModelGrid.setWidget(2, 0, layoutpaneLink);
+		newModelGrid.setWidget(2, 1, suggestBox);
+		
+		newModelGrid.setWidget(3, 0, buttonRun);
+		
+		
+		createForm.addSubmitHandler(new FormPanel.SubmitHandler() {
+			@Override
+			public void onSubmit(SubmitEvent event) {
+				
+				
+				
+			}
+		});
 
-		newModelPanel.add(namepanel);
-		newModelPanel.add(strapanel);
-		newModelPanel.add(buttonRun);
+		// TODO: debug can not get the current model name
+		createForm
+				.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+					public void onSubmitComplete(SubmitCompleteEvent event) {
+						conf.setCurrentCollection(tempvalue);
+						conf.setCurrentEmail(tempemail);
+						sf.setStatus(" Current Model: "
+								+ conf.getCurrentCollection());
+						changeToGenome();
+					}
+				});
 
-		createForm.setWidget(newModelPanel);
+		createForm.setWidget(newModelGrid);
 
 		sp.clear();
 		sp.add(createForm);
@@ -180,13 +203,15 @@ public class RightPanel {
 		ListGridField reactants = new ListGridField("reactants");
 		ListGridField products = new ListGridField("products");
 		ListGridField pathway = new ListGridField("pathway");
-		pathway.setHidden(true);
+		// pathway.setHidden(true);
 
 		pathwayModule.setFields(ko, reac, reactants, arrow, products, pathway);
 
 		pathwayModule.setAutoFetchData(true);
 		// pathwayModule.setSortField("pathway");
 		pathwayModule.setGroupByField("pathway");
+		pathwayModule.setSortField("pathway");
+		
 		HorizontalPanel pathwayAndSavePanel = new HorizontalPanel();
 		pathwayAndSavePanel.add(pathwayModule);
 
@@ -359,13 +384,78 @@ public class RightPanel {
 
 		// pathwayPanel.add(pathwayModule);
 		pathwayPanel.add(pathwayAndSavePanel);
+		
+		VerticalPanel vp = new VerticalPanel();
+		final Button sbmlb = new Button("Get SBML");
+		final Button svgb = new Button("Get Pathway Map");
+		
+		
+		final FormPanel SBMLform = new FormPanel();
+		SBMLform.setAction(ConfigurationFactory.getConfiguration().getBaseURL()+"model/sbml/");
+		SBMLform.setMethod(FormPanel.METHOD_GET);
+		
+		
+		SBMLform.addSubmitHandler(new FormPanel.SubmitHandler() {
+			public void onSubmit(SubmitEvent event) {
+			}
+		});
+		
+		SBMLform.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+			
+			public void onSubmitComplete(SubmitCompleteEvent event) {
+				Window.alert("Job submitted");
+			}
+		});
+
+		sbmlb.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				SBMLform.submit();
+			}
+		});
+		
+
+
+		final FormPanel SVGForm = new FormPanel();
+		SVGForm.setAction(ConfigurationFactory.getConfiguration().getBaseURL()+"model/svg/");
+		SVGForm.setMethod(FormPanel.METHOD_GET);
+		
+		
+		SVGForm.addSubmitHandler(new FormPanel.SubmitHandler() {
+			public void onSubmit(SubmitEvent event) {
+			}
+		});
+		
+		SVGForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+			
+			public void onSubmitComplete(SubmitCompleteEvent event) {
+				Window.alert("Job submitted");
+			}
+		});
+
+		svgb.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				SVGForm.submit();
+			}
+		});
+		vp.add(SBMLform);
+		vp.add(SVGForm);
+		vp.add(sbmlb);
+		vp.add(svgb);		
 		// pathwayPanel.add(buttonPanel);
+		
 		pathwayPanel.add(addPanel);
 
+		pathwayPanel.add(vp);
+		
+		
+		
 		sp.add(pathwayPanel);
 
 	}
 
+	
+	
+	
 	public void ChangeToOptimization() {
 		sp.clear();
 		final VerticalPanel modelPanel = new VerticalPanel();
@@ -548,7 +638,7 @@ public class RightPanel {
 		final Button submitButton = new Button();
 		final Button rundfbaButton = new Button();
 
-		submitButton.setText("Submit FBA Jobs sssss");
+		submitButton.setText("Submit FBA Jobs");
 		rundfbaButton.setText("Set for Dynamic FBA");
 
 		final HorizontalPanel runbuttonPanel = new HorizontalPanel();
@@ -561,12 +651,20 @@ public class RightPanel {
 		runbuttonPanel.add(OptimizationForm);
 		runbuttonPanel.add(submitButton);		
 		runbuttonPanel.add(rundfbaButton);
+		// final Label emailLabel = new Label("Email for result retrieval");
 		
+		// final TextBox emailText = new TextBox();
+		// emailText.setName("email");
+		// emailLabel.setVisible(false);
+		// emailText.setVisible(false);
+		// runbuttonPanel.add(emailLabel);
+		// runbuttonPanel.add(emailText);
 		
 		OptimizationForm.addSubmitHandler(new FormPanel.SubmitHandler() {
 
 			@Override
 			public void onSubmit(SubmitEvent event) {
+
 				// TODO Auto-generated method stub
 			}
 			
@@ -576,6 +674,7 @@ public class RightPanel {
 			
 			@Override
 			public void onSubmitComplete(SubmitCompleteEvent event) {
+
 				Window.alert("Job submitted");
 				// TODO Auto-generated method stub
 			}
@@ -867,10 +966,11 @@ public class RightPanel {
 						@Override
 						public void onSubmitComplete(SubmitCompleteEvent event) {
 							if (event.getResults().contains("Successful")) {
-								changeToWelcome();
+								conf.setLogin(true);
 								a.setText("[Log Out]");
-							} else {
 								changeToWelcome();
+							} else {
+								Window.alert("Wrong Username/Email and password combination.");
 							}
 						}
 					});
@@ -919,49 +1019,50 @@ public class RightPanel {
 		organizationType.addItem("Corporate");
 		organizationType.setName("orgtype");
 
-		TextBox firstName = new TextBox();
+		final TextBox firstName = new TextBox();
 		firstName.setName("firstname");
 
-		TextBox lastName = new TextBox();
+		final TextBox lastName = new TextBox();
 		lastName.setName("lastname");
 
-		TextBox department = new TextBox();
+		final TextBox department = new TextBox();
 		department.setName("department");
 
-		TextBox organization = new TextBox();
+		final TextBox organization = new TextBox();
 		organization.setName("organization");
 
-		TextBox address1 = new TextBox();
+		final TextBox address1 = new TextBox();
 		address1.setName("address1");
 
-		TextBox address2 = new TextBox();
+		final TextBox address2 = new TextBox();
 		address2.setName("address2");
 
-		TextBox country = new TextBox();
+		final TextBox country = new TextBox();
 		country.setName("country");
 
-		userInformation.setWidget(0, 0, new Label("Title*"));
+		userInformation.setWidget(0, 0, new Label("Title"));
 		userInformation.setWidget(0, 1, Title);
-		userInformation.setWidget(1, 0, new Label("First Name*"));
+		userInformation.setWidget(1, 0, new Label("First Name"));
 		userInformation.setWidget(1, 1, firstName);
-		userInformation.setWidget(2, 0, new Label("Last Name*"));
+		userInformation.setWidget(2, 0, new Label("Last Name"));
 		userInformation.setWidget(2, 1, lastName);
-		userInformation.setWidget(3, 0, new Label("Department*"));
+		userInformation.setWidget(3, 0, new Label("Department"));
 		userInformation.setWidget(3, 1, department);
-		userInformation.setWidget(4, 0, new Label("Company/Institution*"));
+		userInformation.setWidget(4, 0, new Label("Company/Institution"));
 		userInformation.setWidget(4, 1, organization);
-		userInformation.setWidget(5, 0, new Label("Organization Type*"));
+		userInformation.setWidget(5, 0, new Label("Organization Type"));
 		userInformation.setWidget(5, 1, organizationType);
-		userInformation.setWidget(6, 0, new Label("Address 1*"));
+		userInformation.setWidget(6, 0, new Label("Address 1"));
 		userInformation.setWidget(6, 1, address1);
-		userInformation.setWidget(7, 0, new Label("Address 2*"));
+		userInformation.setWidget(7, 0, new Label("Address 2"));
 		userInformation.setWidget(7, 1, address2);
-		userInformation.setWidget(8, 0, new Label("Country*"));
+		userInformation.setWidget(8, 0, new Label("Country"));
 		userInformation.setWidget(8, 1, country);
 
 		final CheckBox agreement = new CheckBox();
+		// TOS
 		agreement
-				.setHTML("I have read and agree to the <a href=\"http://www.genome.jp/kegg/catalog/org_list.html\" target=\"_blank\">Term of Use</a>");
+				.setHTML("I have read and agree to the <a href=\"http://tanglab.engineering.wustl.edu/static/tos.html\" target=\"_blank\">Term of Use</a>");
 
 		final Button registerPopup = new Button("Register");
 
@@ -1000,6 +1101,9 @@ public class RightPanel {
 						if (event.getResults().contains("Successfully")) {
 							changeToWelcome();
 						}
+						if (event.getResults().contains("Email")) {
+							Window.alert("Email address already exists in system. Please choose another.");
+						}
 					}
 				});
 
@@ -1008,7 +1112,7 @@ public class RightPanel {
 			@Override
 			public void onSubmit(SubmitEvent event) {
 
-			}
+				}
 
 		});
 
@@ -1017,12 +1121,23 @@ public class RightPanel {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				// TODO check data integrity
+				// check data integrity
 				if (!txtPassword.getText().equals(confirmPassword.getText())) {
 					Window.alert("Please check your passwords.");
+					return;
 				}
 				if (!emailID.getText().contains("@")) {
 					Window.alert("Invalid email address");
+					return;
+				}
+				
+				// Check empty. 
+				boolean empty = false;
+				if (emailID.getText().length()==0) empty = true;
+				if (txtPassword.getText().length()==0) empty = true;
+				if (empty) {
+					Window.alert("Username or Password fields cannot be empty.");
+					return;
 				}
 				registerForm.submit();
 			}

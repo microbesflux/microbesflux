@@ -46,9 +46,9 @@ public class AccountManagementPanel {
 		ListGridField model = new ListGridField("model");
 		ListGridField type = new ListGridField("type");
 		ListGridField status = new ListGridField("status");
-		ListGridField url = new ListGridField("url");
+		// ListGridField url = new ListGridField("url");
 
-		accountSummary.setFields(date, model, type, status, url);
+		accountSummary.setFields(date, model, type, status);
 		accountSummary.setAutoFetchData(true);
 
 		Button buttonExit = new Button("Exit Summary");

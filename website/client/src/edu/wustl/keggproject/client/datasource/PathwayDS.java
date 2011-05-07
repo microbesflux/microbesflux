@@ -38,11 +38,9 @@ public class PathwayDS extends RestDataSource {
 				FieldType.TEXT, "Products");
 		DataSourceTextField pathway = new DataSourceTextField("pathway",
 				"Pathway");
-		pathway.setHidden(true);
-		// pathway.setValueMap("")
+		// pathway.setHidden(true);
+		
 		setFields(pkField, ko, reactionid, reactants, arrow, products, pathway);
-
-		// setFetchDataURL("http://www.cse.wustl.edu/~yx2/fetch.py");
 		setFetchDataURL(myurl + "fetch/");
 		setUpdateDataURL(myurl + "update/");
 		setAddDataURL(myurl + "add/");

@@ -5,7 +5,19 @@ public class Configuration {
 
 	// private String baseurl = "http://127.0.0.1:8000/";
 	private String baseurl = "http://tanglab.engineering.wustl.edu/flux/";
-		
+	private String email = "";
+	
+	private boolean login = false;
+	
+	
+	public void setLogin(boolean l) {
+		login = l;
+	}
+	
+	public boolean getLogin() {
+		return login;
+	}
+	
 	public String getBaseURL() {
 		return baseurl;
 	}
@@ -16,6 +28,14 @@ public class Configuration {
 
 	public String getCurrentCollection() {
 		return currentCollection;
+	}
+	
+	public String getCurrentEmail() {
+		return email;
+	}
+	
+	public void setCurrentEmail(String e) {
+		email = e;
 	}
 
 	public void setCurrentCollection(String currentCollection) {
@@ -30,4 +50,6 @@ public class Configuration {
 					"Not suppose to call the constructor that way");
 		}
 	}
+	
+	
 }

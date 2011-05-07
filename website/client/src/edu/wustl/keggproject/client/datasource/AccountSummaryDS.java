@@ -3,7 +3,6 @@ package edu.wustl.keggproject.client.datasource;
 import com.smartgwt.client.data.DataSourceField;
 import com.smartgwt.client.data.RestDataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
-import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.DSDataFormat;
 import com.smartgwt.client.types.FieldType;
 import com.smartgwt.client.types.RPCTransport;
@@ -36,10 +35,9 @@ public class AccountSummaryDS extends RestDataSource {
 		DataSourceField status = new DataSourceField("status", FieldType.TEXT,
 				"Status");
 		
-		DataSourceField url = new DataSourceField("url", FieldType.LINK,
-		"URL");
+		// DataSourceField url = new DataSourceField("url", FieldType.LINK, "URL");
 		
-		setFields(pkField, date, model, type, status, url);
+		setFields(pkField, date, model, type, status);
 		
 		setFetchDataURL(myurl + "fetch/"); // TODO
 	}
