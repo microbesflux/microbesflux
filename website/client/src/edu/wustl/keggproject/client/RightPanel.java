@@ -1,9 +1,14 @@
 package edu.wustl.keggproject.client;
 
+import com.google.gwt.dev.shell.remoteui.MessageTransport.RequestException;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
@@ -21,6 +26,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.http.client.Request;
+
 import com.smartgwt.client.data.XJSONDataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.Side;
@@ -57,7 +64,6 @@ public class RightPanel {
 		// vp.add(status);
 		// vp.add(sp);
 		// this.initializeSuggestionPanel();
-
 	}
 
 	public void setStatusFormPanel(StatusFormPanel f) {
@@ -68,7 +74,7 @@ public class RightPanel {
 		return sp;
 	}
 
-	public void changeToNewFile() {
+	public void changeToCreateANewCollection() {
 
 		sf.clearForm();
 		sf.clearStatus();
@@ -147,8 +153,6 @@ public class RightPanel {
 			@Override
 			public void onSubmit(SubmitEvent event) {
 				
-				
-				
 			}
 		});
 
@@ -156,11 +160,19 @@ public class RightPanel {
 		createForm
 				.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
 					public void onSubmitComplete(SubmitCompleteEvent event) {
-						conf.setCurrentCollection(tempvalue);
-						conf.setCurrentEmail(tempemail);
-						sf.setStatus(" Current Model: "
-								+ conf.getCurrentCollection());
-						changeToGenome();
+						if (event.getResults().contains("already in use"))
+						{
+							Window.alert("You have already used the name for an existing model, please " +
+									"choose another name.");
+						}
+						
+						else {
+							conf.setCurrentCollection(tempvalue);
+							conf.setCurrentEmail(tempemail);
+							sf.setStatus(" Current Model: "
+									+ conf.getCurrentCollection());
+							changeToGenome();
+						}
 					}
 				});
 
@@ -209,44 +221,58 @@ public class RightPanel {
 
 		pathwayModule.setAutoFetchData(true);
 		// pathwayModule.setSortField("pathway");
-		pathwayModule.setGroupByField("pathway");
+		// pathwayModule.setGroupByField("pathway"); // Don't do Groupby
 		pathwayModule.setSortField("pathway");
 		
 		HorizontalPanel pathwayAndSavePanel = new HorizontalPanel();
 		pathwayAndSavePanel.add(pathwayModule);
 
 		final VerticalPanel pathwayPanel = new VerticalPanel();
-
 		final DynamicForm form = new DynamicForm();
 
 		// form.setIsGroup(true);
 		form.setNumCols(4);
 		form.setDataSource(PathwayDS.getInstance());
-		form.setVisible(false);
-
-		pathwayAndSavePanel.add(form);
-
+		
+		final VerticalPanel formAndSaveCancelPanel = new VerticalPanel();
 		final Button buttonSave = new Button();
-		buttonSave.setText("Save");
-
+		final Button buttonCancel = new Button();
+		
+		buttonSave.setText(" Save ");
+		buttonCancel.setText("Cancel");
+		formAndSaveCancelPanel.add(form);
+		formAndSaveCancelPanel.add(buttonSave);
+		formAndSaveCancelPanel.add(buttonCancel);
+		formAndSaveCancelPanel.setVisible(false);
+		pathwayAndSavePanel.add(formAndSaveCancelPanel);
+		
+		buttonCancel.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				formAndSaveCancelPanel.setVisible(false);
+				// form.setVisible(false);
+				// buttonSave.setVisible(false);
+				// buttonCancel.setVisible(false);
+			}
+		});
+		
 		buttonSave.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				form.saveData();
-				form.setVisible(false);
-				buttonSave.setVisible(false);
+				formAndSaveCancelPanel.setVisible(false);		
 				pathwayModule.markForRedraw();
 			}
 		});
-
-		pathwayAndSavePanel.add(buttonSave);
-		buttonSave.setVisible(false);
-
+				
 		pathwayModule.addRecordClickHandler(new RecordClickHandler() {
 
 			@Override
 			public void onRecordClick(RecordClickEvent event) {
-				form.setVisible(true);
-				buttonSave.setVisible(true);
+				formAndSaveCancelPanel.setVisible(true);
+				
+				// form.setVisible(true);
+				// buttonSave.setVisible(true);
+				// buttonCancel.setVisible(true);
+				
 				form.reset();
 				form.editSelectedData(pathwayModule);
 				final FormItem[] formitem = form.getFields();
@@ -257,62 +283,81 @@ public class RightPanel {
 								"pathway") + "<<<<");
 				if (pathwayModule.getSelectedRecord().getAttribute("pathway")
 						.equals("BIOMASS")) {
-					System.out.println("Herehehrehrhehre");
+					// System.out.println("Herehehrehrhehre");
 					formitem[4].disable();
 				}
 
 			}
 		});
 
-		HorizontalPanel addPanel = new HorizontalPanel();
+		
+		/* For adding pathways */
+		final Grid gridPanel= new Grid(8, 3);
+		final Label addReactionText = new Label("Add reactions");
+		gridPanel.setWidget(0, 0, addReactionText);
+		
+		
+		// HorizontalPanel addPanel = new HorizontalPanel();
+		// final VerticalPanel textPanel = new VerticalPanel();
+		// VerticalPanel operationPanel = new VerticalPanel();
+		// addPanel.add(textPanel);
+		// addPanel.add(operationPanel);
 
-		final VerticalPanel textPanel = new VerticalPanel();
-		VerticalPanel operationPanel = new VerticalPanel();
-
-		addPanel.add(textPanel);
-		addPanel.add(operationPanel);
-
+		final Label reactionText = new Label("Reaction Type");
+		gridPanel.setWidget(1, 0, reactionText);
+		
+		final Label reactantsText = new Label("Reactants");
+		gridPanel.setWidget(2, 0, reactantsText);
+		
 		final TextBox rbox = new TextBox();
+		gridPanel.setWidget(2, 1, rbox);
+		
 		final Label ext1 = new Label(".ext");
-		final Label ext2 = new Label(".ext");
-		final TextBox prod = new TextBox();
-
 		ext1.setVisible(false);
-		ext2.setVisible(false);
-
-		// Label arrowl = new Label("----->");
-
+		gridPanel.setWidget(2, 2, ext1);
+		
+		final Label directionLabel = new Label("Direction");
 		final ListBox arrow1 = new ListBox();
-		arrow1.addItem("--->");
-		arrow1.addItem("<-->");
-
-		textPanel.add(rbox);
-		textPanel.add(ext1);
-
-		textPanel.add(arrow1);
-		textPanel.add(prod);
-		textPanel.add(ext2);
-
-		final ListBox lb = new ListBox();
-		final String pathway_values[] = { "BIOMASS", "Inflow", "Outflow",
-				"Heterogeneous Pathways" };
-
-		lb.addItem("BIOMASS");
-		lb.addItem("Inflow");
-		lb.addItem("Outflow");
-		lb.addItem("Heterogeneous Pathways");
+		arrow1.addItem("====>");
+		arrow1.addItem("<===>");
+		
+		gridPanel.setWidget(3, 0, directionLabel);
+		gridPanel.setWidget(3, 1, arrow1);
+		
+		// Row 4: products
+		final Label productsText = new Label("Products");
+		final TextBox prod = new TextBox();
+		final Label ext2 = new Label(".ext");		
+		ext2.setVisible(false);
+		
+		// Default values.
 		prod.setValue("BIOMASS");
 		prod.setEnabled(false);
+		arrow1.setSelectedIndex(0);
+		arrow1.setEnabled(false);
+		
 
-		lb.addChangeHandler(new ChangeHandler() {
+		gridPanel.setWidget(4, 0, productsText);
+		gridPanel.setWidget(4, 1, prod);
+		gridPanel.setWidget(4, 2, ext2);
+		
+		final ListBox reactionTypeList = new ListBox();
+		final String pathway_values[] = { "BIOMASS", "Inflow", "Outflow","Heterologous Pathways" };
+
+		reactionTypeList.addItem("BIOMASS");
+		reactionTypeList.addItem("Inflow");
+		reactionTypeList.addItem("Outflow");
+		reactionTypeList.addItem("Heterologous Pathways");
+		
+		reactionTypeList.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent event) {
-				int v = lb.getSelectedIndex();
+				int v = reactionTypeList.getSelectedIndex();
 				if (v == 0) {
 					prod.setValue("BIOMASS");
 					prod.setEnabled(false);
 					ext1.setVisible(false);
 					ext2.setVisible(false);
-					arrow1.setSelectedIndex(0);
+					arrow1.setSelectedIndex(0);	// single direction
 					arrow1.setEnabled(false);
 					rbox.setValue("");
 				} else if (v == 1) {
@@ -343,17 +388,20 @@ public class RightPanel {
 			}
 		});
 
-		final Button buttonAdd = new Button("Add");
+		gridPanel.setWidget(1, 1, reactionTypeList);
 		
+		
+		final FormPanel checkForm = new FormPanel();
+		
+		Configuration conf = ConfigurationFactory.getConfiguration();
+		checkForm.setAction(conf.getBaseURL() + "pathway/check/");
+		checkForm.setMethod(FormPanel.METHOD_GET);
+		checkForm.setWidget(gridPanel);
+		
+		
+		final Button buttonAdd = new Button("Add");
 		buttonAdd.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-
-				// for(int i=0;i<pathwayModule.getRecords().length;i++){
-				// if(pathwayModule.getRecord(i).getAttribute("pathway").equals("BIOMASS")){
-				// SC.say("Only one reaction is allowed in BIOMASS!");
-				// return;
-				// }
-				// }
 
 				if (rbox.getText().length() == 0) {
 					SC.say("Reactants cannot be empty!");
@@ -368,24 +416,90 @@ public class RightPanel {
 				r.setAttribute("ko", false);
 				r.setAttribute("reactants", rbox.getText());
 				r.setAttribute("products", prod.getText());
-				r.setAttribute("pathway", pathway_values[lb.getSelectedIndex()]);
+				r.setAttribute("pathway", pathway_values[reactionTypeList.getSelectedIndex()]);
 				r.setAttribute("arrow", 0);
 				// r.setAttribute(property, value)
 				pathwayModule.addData(r);
+				buttonAdd.setEnabled(false);
 			}
 		});
-
-		operationPanel.add(lb);
-		operationPanel.add(buttonAdd);
-
-		// final HorizontalPanel buttonPanel=new HorizontalPanel();
-		// buttonPanel.add(buttonAdd);
-		// buttonPanel.add(buttonSave);
-
-		// pathwayPanel.add(pathwayModule);
-		pathwayPanel.add(pathwayAndSavePanel);
 		
-		VerticalPanel vp = new VerticalPanel();
+		checkForm.addSubmitHandler(new FormPanel.SubmitHandler() {
+			public void onSubmit(SubmitEvent event) {
+			}
+		});
+		
+		checkForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+			public void onSubmitComplete(SubmitCompleteEvent event) {
+				if (event.getResults().contains("Valid")) {
+					buttonAdd.setEnabled(true);
+				}
+			}
+		});
+		
+		
+		final Button buttonCheck = new Button("Validate Pathway");
+		
+		buttonCheck.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {				
+				StringBuffer url = new StringBuffer();
+				url.append(ConfigurationFactory.getConfiguration().getBaseURL());
+				url.append("pathway/check/");
+				url.append("?reactants=");
+				url.append(rbox.getText());
+				url.append("&");
+				url.append("products=");
+				url.append(prod.getText());
+				url.append("&pathway=");
+				url.append(pathway_values[reactionTypeList.getSelectedIndex()]);
+				
+				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
+				try {
+					Request request = builder.sendRequest(null, new RequestCallback() {
+				    public void onError(Request request, Throwable exception) {
+				       return;
+				    }
+
+				    public void onResponseReceived(Request request, Response response) {
+				      if (200 == response.getStatusCode()) {
+				          if (response.getText().contains("Valid")) {
+				        	  buttonAdd.setEnabled(true);
+				          }
+				          else {
+				        	  Window.alert("Invalid compound name(s).");
+				          }
+				      } else {
+				    	  return;
+				      }
+				    }
+				  });      
+				} catch (com.google.gwt.http.client.RequestException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		buttonAdd.setEnabled(false);
+		
+		gridPanel.setWidget(5, 1, buttonCheck);
+		gridPanel.setWidget(5, 2, buttonAdd);
+		
+		
+		// gridPanel.setWidget(5, 1, buttonAdd);
+		// pathwayPanel.add(gridPanel);
+
+		pathwayPanel.add(pathwayAndSavePanel);		
+		pathwayPanel.add(checkForm);
+		
+		final VerticalPanel vp = new VerticalPanel();
+		final Grid sbmlandsvgPanel = new Grid(2,2);
+		
+		
+		final Label exportLabel = new Label("Export");
+		
+		sbmlandsvgPanel.setWidget(0, 0, exportLabel);
+		
 		final Button sbmlb = new Button("Get SBML");
 		final Button svgb = new Button("Get Pathway Map");
 		
@@ -413,8 +527,6 @@ public class RightPanel {
 			}
 		});
 		
-
-
 		final FormPanel SVGForm = new FormPanel();
 		SVGForm.setAction(ConfigurationFactory.getConfiguration().getBaseURL()+"model/svg/");
 		SVGForm.setMethod(FormPanel.METHOD_GET);
@@ -439,22 +551,18 @@ public class RightPanel {
 		});
 		vp.add(SBMLform);
 		vp.add(SVGForm);
-		vp.add(sbmlb);
-		vp.add(svgb);		
-		// pathwayPanel.add(buttonPanel);
 		
-		pathwayPanel.add(addPanel);
+		vp.add(sbmlandsvgPanel);
+		sbmlandsvgPanel.setWidget(1, 0, sbmlb);
+		sbmlandsvgPanel.setWidget(1, 1, svgb);
+		
 
+		
 		pathwayPanel.add(vp);
-		
-		
-		
 		sp.add(pathwayPanel);
 
 	}
 
-	
-	
 	
 	public void ChangeToOptimization() {
 		sp.clear();
@@ -519,10 +627,11 @@ public class RightPanel {
 			}
 		});
 
-		final ListBox maxmin = new ListBox();
-		maxmin.addItem("maximize");
-		maxmin.addItem("minimize");
-
+		// final ListBox maxmin = new ListBox();
+		// maxmin.addItem("maximize");
+		// maxmin.addItem("minimize");
+		final Label maxmin = new Label("maximize  ");
+		
 		final ListBox obj = new ListBox();
 		obj.addItem("Customer-defined objective function");
 		obj.addItem("Biomass");

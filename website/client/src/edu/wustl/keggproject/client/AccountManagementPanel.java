@@ -4,6 +4,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
@@ -18,7 +19,12 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 
 import edu.wustl.keggproject.client.datasource.AccountSummaryDS;
 
+
+
+
 public class AccountManagementPanel {
+
+	private DialogBox mydia;
 
 	public SimplePanel accountManagementPanel = new SimplePanel();
 
@@ -26,6 +32,10 @@ public class AccountManagementPanel {
 		return accountManagementPanel;
 	}
 
+	public void setDiaglog(DialogBox d) {
+		mydia = d;
+	}
+	
 	public void initialize() {
 		accountManagementPanel.setVisible(false);
 	}
@@ -54,7 +64,8 @@ public class AccountManagementPanel {
 		Button buttonExit = new Button("Exit Summary");
 		buttonExit.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				accountManagementPanel.setVisible(false);
+				// accountManagementPanel.setVisible(false);
+				mydia.hide();
 			}
 		});
 
@@ -110,7 +121,8 @@ public class AccountManagementPanel {
 					return;
 				}
 				changePassword.submit();
-				accountManagementPanel.setVisible(false);
+				// accountManagementPanel.setVisible(false);
+				mydia.hide();
 			}
 
 		});
@@ -119,7 +131,8 @@ public class AccountManagementPanel {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				accountManagementPanel.setVisible(false);
+				// accountManagementPanel.setVisible(false);
+				mydia.hide();
 			}
 		});
 

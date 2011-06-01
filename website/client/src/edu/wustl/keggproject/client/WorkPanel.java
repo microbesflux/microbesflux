@@ -183,7 +183,7 @@ public class WorkPanel {
 		lb.addItem("BIOMASS");
 		lb.addItem("Inflow");
 		lb.addItem("Outflow");
-		lb.addItem("Heterogeneous Pathways");
+		lb.addItem("Heterologous Pathways");
 		prod.setValue("BIOMASS");
 		prod.setEnabled(false);
 
@@ -198,12 +198,12 @@ public class WorkPanel {
 					arrow1.setSelectedIndex(0);
 					arrow1.setEnabled(false);
 					rbox.setValue("");
-				} else if (v == 1) {
+				} else if (v == 1) {	// Inflow
 					prod.setValue("");
 					prod.setEnabled(true);
 					ext1.setVisible(true);
 					ext2.setVisible(false);
-					arrow1.setSelectedIndex(0);
+					arrow1.setSelectedIndex(1);
 					arrow1.setEnabled(false);
 					rbox.setValue("");
 				} else if (v == 2) {
@@ -211,7 +211,7 @@ public class WorkPanel {
 					prod.setEnabled(true);
 					ext2.setVisible(true);
 					ext1.setVisible(false);
-					arrow1.setSelectedIndex(0);
+					arrow1.setSelectedIndex(1);
 					arrow1.setEnabled(false);
 					rbox.setValue("");
 				} else {
@@ -231,13 +231,6 @@ public class WorkPanel {
 
 		buttonAdd.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-
-				// for(int i=0;i<pathwayModule.getRecords().length;i++){
-				// if(pathwayModule.getRecord(i).getAttribute("pathway").equals("BIOMASS")){
-				// SC.say("Only one reaction is allowed in BIOMASS!");
-				// return;
-				// }
-				// }
 
 				if (rbox.getText().length() == 0) {
 					SC.say("Reactants cannot be empty!");
