@@ -5,6 +5,8 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
@@ -13,6 +15,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
@@ -343,7 +346,8 @@ public class RightPanel {
 		
 		final ListBox reactionTypeList = new ListBox();
 		final String pathway_values[] = { "BIOMASS", "Inflow", "Outflow","Heterologous Pathways" };
-
+		final Button buttonAdd = new Button("Add");
+		
 		reactionTypeList.addItem("BIOMASS");
 		reactionTypeList.addItem("Inflow");
 		reactionTypeList.addItem("Outflow");
@@ -352,6 +356,7 @@ public class RightPanel {
 		reactionTypeList.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent event) {
 				int v = reactionTypeList.getSelectedIndex();
+				buttonAdd.setEnabled(false);
 				if (v == 0) {
 					prod.setValue("BIOMASS");
 					prod.setEnabled(false);
@@ -399,7 +404,7 @@ public class RightPanel {
 		checkForm.setWidget(gridPanel);
 		
 		
-		final Button buttonAdd = new Button("Add");
+		
 		buttonAdd.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
@@ -437,6 +442,18 @@ public class RightPanel {
 			}
 		});
 		
+		// rbox.addFocusListener(new FocusListener() {});
+		rbox.addFocusHandler(new FocusHandler() {
+			public void onFocus(FocusEvent event) {
+				buttonAdd.setEnabled(false); // When user is highlight something
+				// add becomes invalid
+			}});
+		
+		prod.addFocusHandler(new FocusHandler() {
+			public void onFocus(FocusEvent event) {
+				buttonAdd.setEnabled(false); // When user is highlight something
+				// add becomes invalid
+			}});
 		
 		final Button buttonCheck = new Button("Validate Pathway");
 		
@@ -467,6 +484,7 @@ public class RightPanel {
 				          }
 				          else {
 				        	  Window.alert("Invalid compound name(s).");
+				        	  buttonAdd.setEnabled(false);
 				          }
 				      } else {
 				    	  return;
@@ -570,7 +588,8 @@ public class RightPanel {
 
 		// objective function module
 		final ListGrid objectiveList = new ListGrid();
-
+		
+		
 		/*
 		 * optimizationModule.setWidth(700); optimizationModule.setHeight(500);
 		 * optimizationModule.setShowAllRecords(true);
@@ -745,10 +764,10 @@ public class RightPanel {
 		boundaryPanel.add(boundaryUpdatePanel);
 
 		final Button submitButton = new Button();
-		final Button rundfbaButton = new Button();
+		final Button switchToDFBAbutton = new Button();
 
 		submitButton.setText("Submit FBA Jobs");
-		rundfbaButton.setText("Set for Dynamic FBA");
+		switchToDFBAbutton.setText("Set for Dynamic FBA");
 
 		final HorizontalPanel runbuttonPanel = new HorizontalPanel();
 
@@ -759,7 +778,7 @@ public class RightPanel {
 		// OptimizationForm.
 		runbuttonPanel.add(OptimizationForm);
 		runbuttonPanel.add(submitButton);		
-		runbuttonPanel.add(rundfbaButton);
+		runbuttonPanel.add(switchToDFBAbutton);
 		// final Label emailLabel = new Label("Email for result retrieval");
 		
 		// final TextBox emailText = new TextBox();
@@ -803,7 +822,8 @@ public class RightPanel {
 		// Add a label
 		// vPanel.add(new HTML());
 		vPanel.add(instructiondFBA);
-
+		
+		
 		// Add a file upload widget
 		final FileUpload fileUpload = new FileUpload();
 		fileUpload.setName("uploadFormElement");
@@ -827,11 +847,15 @@ public class RightPanel {
 		});
 
 		fPanel.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-
 			@Override
 			public void onSubmitComplete(SubmitCompleteEvent event) {
-				// Window.alert(event.getResults());
-				Window.alert("File Uploaded");
+				final Configuration conf = ConfigurationFactory.getConfiguration();
+				// content = """Successfully Uploaded. \n File key is """ + newkey
+				String temp = event.getResults();
+				String[] sarray = temp.split(" ");
+				String fileKey = sarray[sarray.length-1];
+				conf.setUploadFile(fileKey);
+				Window.alert("File Uploaded. File key is " + fileKey + ".");
 			}
 		});
 
@@ -847,9 +871,44 @@ public class RightPanel {
 		});
 
 		vPanel.add(fPanel);
+		
+		
+		/* DFBA section */
+		final Button dfbaSubmitButton = new Button("Submit DFBA Job");
+		
+		dfbaSubmitButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				StringBuffer url = new StringBuffer();
+				url.append(ConfigurationFactory.getConfiguration().getBaseURL());
+				url.append("model/dfba/");	// Server handles everything
+				
+				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
+					try {
+						Request request = builder.sendRequest(null, new RequestCallback() {
+						public void onError(Request request, Throwable exception) {
+						   return;
+						}
+
+						public void onResponseReceived(Request request, Response response) {
+						  if (200 == response.getStatusCode()) {
+						      if (response.getText().contains("New DFBA")) {
+						    	  Window.alert("DFBA job submitted.");
+						      }
+						  } else {
+							  return;
+						  }
+						}      
+						});
+					} catch (com.google.gwt.http.client.RequestException e) {
+						e.printStackTrace();
+					}
+			}
+		});
+		
+		vPanel.add(dfbaSubmitButton);
 		vPanel.setVisible(false);
 
-		rundfbaButton.addClickHandler(new ClickHandler() {
+		switchToDFBAbutton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vPanel.setVisible(true);
 			}

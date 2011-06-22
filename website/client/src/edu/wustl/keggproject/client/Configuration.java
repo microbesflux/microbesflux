@@ -6,6 +6,8 @@ public class Configuration {
 	// private String baseurl = "http://127.0.0.1:8000/";
 	private String baseurl = "http://tanglab.engineering.wustl.edu/flux/";
 	private String email = "";
+	private String uploadFile="";
+	
 	
 	private boolean login = false;
 	
@@ -38,6 +40,13 @@ public class Configuration {
 		email = e;
 	}
 
+	public String getUploadFile() {
+		return uploadFile;
+	}
+	
+	public void setUploadFile(String f) {
+		uploadFile = f;
+	}
 	public void setCurrentCollection(String currentCollection) {
 		this.currentCollection = currentCollection;
 	}

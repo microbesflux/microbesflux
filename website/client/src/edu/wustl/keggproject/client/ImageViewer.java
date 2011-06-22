@@ -24,17 +24,13 @@ public class ImageViewer implements EntryPoint {
 		
 		RightPanel rightp = new RightPanel();
 		StatusFormPanel sfp = new StatusFormPanel();
-		// AccountManagementPanel amp= new AccountManagementPanel();
 		
 		rightp.initialize();
 		sfp.initialize();
-		// amp.initialize();
-		
-		//designate the corresponding panels in rightVerticalPanel
+
 		leftp.setRightPanel(rightp);
 		leftp.setStatusFormPanel(sfp);
 		
-		// leftp.setAccountManagementPanel(amp); 
 		rightp.setStatusFormPanel(sfp);
 		loginpanel.setRightPanel(rightp);
 		
