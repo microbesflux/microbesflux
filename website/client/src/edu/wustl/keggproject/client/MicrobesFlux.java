@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class ImageViewer implements EntryPoint {
+public class MicrobesFlux implements EntryPoint {
 
 	public void onModuleLoad() {
 
