@@ -243,6 +243,7 @@ public class RightPanel {
 		
 		buttonSave.setText(" Save ");
 		buttonCancel.setText("Cancel");
+		
 		formAndSaveCancelPanel.add(form);
 		formAndSaveCancelPanel.add(buttonSave);
 		formAndSaveCancelPanel.add(buttonCancel);
@@ -422,8 +423,8 @@ public class RightPanel {
 				r.setAttribute("reactants", rbox.getText());
 				r.setAttribute("products", prod.getText());
 				r.setAttribute("pathway", pathway_values[reactionTypeList.getSelectedIndex()]);
-				r.setAttribute("arrow", 0);
-				// r.setAttribute(property, value)
+				r.setAttribute("arrow", arrow1.getSelectedIndex());
+				
 				pathwayModule.addData(r);
 				buttonAdd.setEnabled(false);
 			}
@@ -617,28 +618,41 @@ public class RightPanel {
 		final VerticalPanel objectiveUpdatePanel = new VerticalPanel();
 
 		final Button buttonSave = new Button();
+		final Button buttonCancel = new Button();
+		buttonCancel.setText("Cancel");
 		buttonSave.setText("Save");
 
+		final HorizontalPanel hp = new HorizontalPanel();
+		hp.add(buttonSave);
+		hp.add(buttonCancel);
+		objectiveUpdatePanel.add(hp);
+		hp.setVisible(false);
+		
 		buttonSave.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				form.saveData();
 				form.setVisible(false);
-				buttonSave.setVisible(false);
+				hp.setVisible(false);
 			}
 		});
-
+		
+		buttonCancel.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				form.setVisible(false);
+				hp.setVisible(false);
+			}
+		});
 		objectiveUpdatePanel.setVisible(false);
 		objectiveUpdatePanel.add(form);
-		objectiveUpdatePanel.add(buttonSave);
-
-		// objectiveList.disable();
-
+		
+		
+		
 		objectiveList.addRecordClickHandler(new RecordClickHandler() {
 			@Override
 			public void onRecordClick(RecordClickEvent event) {
 				objectiveUpdatePanel.setVisible(true);
 				form.setVisible(true);
-				buttonSave.setVisible(true);
+				hp.setVisible(true);
 				form.reset();
 				form.editSelectedData(objectiveList);
 				final FormItem[] formitem = form.getFields();
@@ -714,8 +728,24 @@ public class RightPanel {
 		final VerticalPanel boundaryUpdatePanel = new VerticalPanel();
 
 		final Button boundarySave = new Button();
+		final Button boundaryCancel = new Button();
+		
 		boundarySave.setText("Save");
-
+		boundaryCancel.setText("Cancel");
+		boundaryUpdatePanel.add(boundaryForm);
+		final HorizontalPanel hp2 = new HorizontalPanel();
+		hp2.add(boundarySave);
+		hp2.add(boundaryCancel);
+		boundaryUpdatePanel.add(hp2);
+		
+		boundaryCancel.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				hp2.setVisible(false);
+				boundaryForm.setVisible(false);
+				
+			}
+		});
+		
 		boundarySave.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				float l, u;
@@ -738,20 +768,28 @@ public class RightPanel {
 				boundaryForm.saveData();
 
 				boundaryForm.setVisible(false);
-				boundarySave.setVisible(false);
+				hp2.setVisible(false);
+				
+				// boundarySave.setVisible(false);
+				// boundaryCancel.setVisible(false);
 			}
 		});
 
-		boundaryUpdatePanel.add(boundaryForm);
-		boundaryUpdatePanel.add(boundarySave);
 
-		boundarySave.setVisible(false);
-
+		
+		// boundaryUpdatePanel.add(boundarySave);
+		// boundaryUpdatePanel.add(boundaryCancel);
+		
+		// boundarySave.setVisible(false);
+		hp2.setVisible(false);
+		
 		boundaryList.addRecordClickHandler(new RecordClickHandler() {
 			@Override
 			public void onRecordClick(RecordClickEvent event) {
+				
 				boundaryForm.setVisible(true);
-				boundarySave.setVisible(true);
+				hp2.setVisible(true);
+				
 				boundaryForm.reset();
 				boundaryForm.editSelectedData(boundaryList);
 				final FormItem[] boundaryformitem = boundaryForm.getFields();
@@ -772,7 +810,9 @@ public class RightPanel {
 		final HorizontalPanel runbuttonPanel = new HorizontalPanel();
 
 		final FormPanel OptimizationForm = new FormPanel();
-		OptimizationForm.setAction(ConfigurationFactory.getConfiguration().getBaseURL()+"model/optimization/");
+		String objType = new String("?obj_type=" + obj.getSelectedIndex() );
+		
+		OptimizationForm.setAction(ConfigurationFactory.getConfiguration().getBaseURL()+"model/optimization/" + objType);
 		OptimizationForm.setMethod(FormPanel.METHOD_GET);
 		// OptimizationForm.setWidget(submitButton);
 		// OptimizationForm.
@@ -881,7 +921,7 @@ public class RightPanel {
 				StringBuffer url = new StringBuffer();
 				url.append(ConfigurationFactory.getConfiguration().getBaseURL());
 				url.append("model/dfba/");	// Server handles everything
-				
+				url.append("?obj_type=" + obj.getSelectedIndex());
 				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
 					try {
 						Request request = builder.sendRequest(null, new RequestCallback() {

@@ -138,7 +138,7 @@ public class BateriaSuggestionBox extends SuggestBox{
 			"pab", "pfu", "tko", "ton", "tga", "tsi", "abi", "rci", "ape",
 			"smr", "iho", "dka", "hbu", "sso", "sto", "sai", "sis", "sia",
 			"sim", "sid", "siy", "sin", "sii", "mse", "pai", "pis", "pcl",
-			"pas", "cma", "tne", "tpe", "nmr", "neq", "kcr" };
+			"pas", "cma", "tne", "tpe", "nmr", "neq", "kcr", "TES", "TOY"};
 
 	static String[] realname = { "H.sapiens", "P.troglodytes", "M.mulatta",
 			"M.musculus", "R.norvegicus", "C.familiaris", "B.taurus",
@@ -494,7 +494,7 @@ public class BateriaSuggestionBox extends SuggestBox{
 			"S.islandicus_Y.N.15.51", "S.islandicus_L.D.8.5", "M.sedula",
 			"P.aerophilum", "P.islandicum", "P.calidifontis", "P.arsenaticum",
 			"C.maquilingensis", "T.neutrophilus", "T.pendens", "N.maritimus",
-			"N.equitans", "K.cryptofilum" };
+			"N.equitans", "K.cryptofilum" , "TEST.BACTERIA", "A.TOY.EXAMPLE"};
 	static MultiWordSuggestOracle oracle;
 	
 	static{
