@@ -1,0 +1,10 @@
+j2      %       g6p --> r5p     %   20  %       0
+j3      %       g6p --> (2) pyr     %   20  %       0
+j4      %       r5p --> pyr         %   20  %       0
+j5      %       pyr --> accoa     %   20  %       0
+j7      %       accoa + oaa --> icit     %   20  %       0
+j8      %       icit --> akg        %   20  %       0
+j9      %       akg --> suc         %   20  %       0
+j10      %       suc --> oaa        %   20  %       0
+j11      %       pyr --> oaa        %   20  %       0
+BIOMASS0    %   (1.078) akg + (1.786) oaa + (2.928) accoa + (2.833) pyr + (0.205) g6p --> biomass.ext   %   20  %   0

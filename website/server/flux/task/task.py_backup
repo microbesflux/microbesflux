@@ -1,0 +1,181 @@
+# from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
+from flux.models import Task
+
+import cPickle
+import datetime 
+
+# FIXME: Basically rewrite this using Mysql database
+
+
+(r'^task/list/', task_list),
+(r'^task/add/', task_add),
+(r'^task/remove/', task_remove),
+(r'^task/mark/', task_mark),
+(r'^task/mail/', task_mail),
+
+########## Methods for external use ####
+def task_list(request):
+    all_task = Task.objects.all()[-10:]
+    l = []
+    for t in all_task:
+        l.append(str(t))
+    return HttpResponse(content = '\n'.join(l), status = 200, content_type = "text/html")
+
+def read_task_list():
+	fs = FileSystemStorage()
+	f = fs.open('task_list', "r")
+	task_list = cPickle.load(f)
+	f.close()
+	return task_list
+
+def write_task_list(task):
+	fs = FileSystemStorage()
+	f = fs.open('task_list', "w")
+	task_list = cPickle.dump(task, f)
+	f.close()
+
+def task_add(request):
+	tid = str(datetime.datetime.now()).replace(' ','-')
+	t = request.GET['task']
+	ty = request.GET['type']
+	email = request.GET['email']
+	f = None
+	if request.GET.has_key('file'):
+	    f = request.GET['file']
+	internal_task_add(tid, t, ty, email, f)
+	return HttpResponse(content = """ Task added  """, status = 200, content_type = "text/html")
+
+def internal_task_add(tid, t, ty, email, f):
+	task = read_task_list()
+	# task = set()
+	task.add((tid, t, ty, email, f, "todo"))
+        write_task_list(task)
+
+def internal_task_remove(tid):
+	task = read_task_list()
+	for t in task:
+		if t[0] == tid:
+			task.remove(t)
+			break
+	write_task_list(task)
+ 
+def task_list(request):
+	l = []
+	task = read_task_list()
+	for t in task:
+		info = map(str, t)
+		l.append(' '.join(info))
+    	return HttpResponse(content = '\n'.join(l), status = 200, content_type = "text/html")
+
+def task_remove(request):
+    	tid = request.GET['tid']
+	internal_task_remove(tid)
+    	return HttpResponse(content = "Task Removed", status = 200, content_type = "text/html")
+
+import sys, smtplib
+from email.MIMEText import MIMEText
+from email.MIMEMultipart import MIMEMultipart
+from django.http import HttpResponse
+
+COMMASPACE = ', '
+
+def send_mail(address, attachments, title = ""):
+	msg = MIMEMultipart()
+	msg['Subject'] = 'Mail from MicrobesFlux --' + title
+	msg['From'] = 'tanglab@seas.wustl.edu'
+	msg['To'] = address
+	
+	fromaddr = "tanglab@seas.wustl.edu"
+	toaddrs = [address, ] 
+	content = MIMEText("Dear MicrobesFlux User:  Thank you for using our website. -- MicrobesFlux")
+	msg.attach(content)
+	fs = FileSystemStorage()
+	for fname in attachments:
+		fp = fs.open(fname, "rb")
+		content = MIMEText(fp.read())
+		content.add_header('Content-Disposition', 'attachment; filename="'+fname+'"')
+		fp.close()
+		msg.attach(content)
+
+	server = smtplib.SMTP('localhost')
+	server.sendmail(fromaddr, toaddrs, msg.as_string())
+	server.quit()
+
+
+def generate_report(name):
+	fs = FileSystemStorage()
+	amplresult = name + "_result.txt"
+	mapresult  = name + ".map"
+	fampl = fs.open(amplresult, "r")
+	fmap  = fs.open(mapresult, "r")
+	fheader = fs.open(name + "_header.txt", "r")
+	
+	d = {}
+	for l in fmap:
+		vname, oldname = l.split()[:2]
+		d[vname]  = oldname
+	finaloutput = fs.open(name + "_report.txt", "a")
+	for l in fheader:
+	    #if l.find("EXIT")!=-1 or l.find("Ipopt")!=-1:
+	    finaloutput.write(l)
+	fheader.close()
+	
+	fl = fampl.xreadlines()
+	for l in fl:
+		if l.find("=== Flux Results ===") != -1:
+			break
+		if l.find("EXIT")!=-1 or l.find("Objective function")!= -1 :
+			finaloutput.write(l)
+	for l in fl:
+		temp = l.split()
+		if len(temp) == 2:
+			name, value = l.split()
+			finaloutput.write( d[name])
+			finaloutput.write( "\t")
+			finaloutput.write( value)
+			finaloutput.write( "\n" )
+		else:
+			finaloutput.write(l)
+	fampl.close()
+	fmap.close()
+	finaloutput.close()
+
+def task_mail(request):
+	tid = request.GET['tid']
+	task = read_task_list()
+	t = None
+	for t in task:
+		if t[0] == tid:
+			break
+	if t:
+		filename = t[1]	
+		type = t[2]
+		newf = t[1].split(".")[0]
+		address = t[3]
+		if type == "fba":
+			generate_report(newf)
+			send_mail(address, [newf+"_fba_report.txt",], title = "FBA")
+		elif type == "dfba":
+			generate_report(newf)
+			send_mail(address, [newf+"_dfba_report.txt",], title = "dFBA")
+		else:
+			send_mail(address, [newf+".svg",], title = "SVG")
+		internal_task_remove(tid)
+
+    	return HttpResponse(content = """ Mail sent """, status = 200, content_type = "text/html")
+
+def task_mark(request):
+	tid = request.GET['tid']
+	task = read_task_list()
+	t = None
+	for t in task:
+		if t[0] == tid:
+			break
+	if len(t):
+		l = list(t)
+		l[4] = "enqueue"
+		task.remove(t)
+		task.add(tuple(l))
+		write_task_list(task)
+    	return HttpResponse(content = """ Task Marked  """, status = 200, content_type = "text/html")
