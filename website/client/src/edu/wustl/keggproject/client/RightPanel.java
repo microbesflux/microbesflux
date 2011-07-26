@@ -1,6 +1,31 @@
+/* 
+ * Copyright (c) 2011, Eric Xu, Xueyang Feng
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, 
+ *  this list of conditions and the following disclaimer.
+ *  Redistributions in binary form must reproduce the above copyright notice, 
+ *  this list of conditions and the following disclaimer in the documentation 
+ *  and/or other materials provided with the distribution.
+ *  
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *  POSSIBILITY OF SUCH DAMAGE.
+ */
+
 package edu.wustl.keggproject.client;
 
-import com.google.gwt.dev.shell.remoteui.MessageTransport.RequestException;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -15,7 +40,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
@@ -30,6 +54,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.http.client.Request;
+
 
 import com.smartgwt.client.data.XJSONDataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -60,6 +85,8 @@ public class RightPanel {
 
 	VerticalPanel newModelPanel;
 	BateriaSuggestionBox suggestBox;
+	// TextBox suggestBox;
+	
 	SimplePanel sp = new SimplePanel();
 
 	public void initialize() {
@@ -108,15 +135,18 @@ public class RightPanel {
 		hiddenname.setName("bacteria");
 
 		suggestBox = new BateriaSuggestionBox(hiddenname);
-
 		suggestBox.setLimit(20);
 		suggestBox.setStyleName("gwt-SuggestBox-F1");
 		suggestBox.setText("");
 		suggestBox.setSize("200px", "20px");
-
-		// strapanel.add(layoutpaneLink);
-		// strapanel.add(suggestBox);
-
+//
+//		suggestBox = new TextBox();
+//		suggestBox.getElement().setId("suggest-box");
+//		suggestBox.setName("suggest-box");
+//		suggestBox.setText("");
+//		suggestBox.setSize("200px", "20px");
+		
+		
 		Button buttonRun = new Button();
 		buttonRun.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -473,7 +503,7 @@ public class RightPanel {
 				
 				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
 				try {
-					Request request = builder.sendRequest(null, new RequestCallback() {
+					builder.sendRequest(null, new RequestCallback() {
 				    public void onError(Request request, Throwable exception) {
 				       return;
 				    }
@@ -775,11 +805,6 @@ public class RightPanel {
 			}
 		});
 
-
-		
-		// boundaryUpdatePanel.add(boundarySave);
-		// boundaryUpdatePanel.add(boundaryCancel);
-		
 		// boundarySave.setVisible(false);
 		hp2.setVisible(false);
 		
@@ -800,71 +825,48 @@ public class RightPanel {
 		boundaryPanel.setTitle("Boundary for fluxes (lb<=v<=ub)");
 		boundaryPanel.add(boundaryList);
 		boundaryPanel.add(boundaryUpdatePanel);
-
-		final Button submitButton = new Button();
-		final Button switchToDFBAbutton = new Button();
-
-		submitButton.setText("Submit FBA Jobs");
-		switchToDFBAbutton.setText("Set for Dynamic FBA");
-
+		
 		final HorizontalPanel runbuttonPanel = new HorizontalPanel();
-
-		final FormPanel OptimizationForm = new FormPanel();
-		String objType = new String("?obj_type=" + obj.getSelectedIndex() );
-		
-		OptimizationForm.setAction(ConfigurationFactory.getConfiguration().getBaseURL()+"model/optimization/" + objType);
-		OptimizationForm.setMethod(FormPanel.METHOD_GET);
-		// OptimizationForm.setWidget(submitButton);
-		// OptimizationForm.
-		runbuttonPanel.add(OptimizationForm);
-		runbuttonPanel.add(submitButton);		
+		final Button fbaSubmitButton = new Button("Submit FBA Job");
+		final Button switchToDFBAbutton = new Button("Set for Dynamic FBA");
+		runbuttonPanel.add(fbaSubmitButton);	
 		runbuttonPanel.add(switchToDFBAbutton);
-		// final Label emailLabel = new Label("Email for result retrieval");
 		
-		// final TextBox emailText = new TextBox();
-		// emailText.setName("email");
-		// emailLabel.setVisible(false);
-		// emailText.setVisible(false);
-		// runbuttonPanel.add(emailLabel);
-		// runbuttonPanel.add(emailText);
-		
-		OptimizationForm.addSubmitHandler(new FormPanel.SubmitHandler() {
-
-			@Override
-			public void onSubmit(SubmitEvent event) {
-
-				// TODO Auto-generated method stub
-			}
-			
-		});
-		
-		OptimizationForm.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-			
-			@Override
-			public void onSubmitComplete(SubmitCompleteEvent event) {
-
-				Window.alert("Job submitted");
-				// TODO Auto-generated method stub
-			}
-		});
-
-		
-		submitButton.addClickHandler(new ClickHandler() {
+		fbaSubmitButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				OptimizationForm.submit();
+				StringBuffer url = new StringBuffer();
+				url.append(ConfigurationFactory.getConfiguration().getBaseURL());
+				url.append("model/optimization/");
+				url.append("?obj_type=" + obj.getSelectedIndex());
+				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
+					try {
+						builder.sendRequest(null, new RequestCallback() {
+						public void onError(Request request, Throwable exception) {
+						   return;
+						}
+						
+						public void onResponseReceived(Request request, Response response) {
+						  if (200 == response.getStatusCode()) {
+						      if (response.getText().contains("New Optimization problem submitted")) {
+						    	  Window.alert("FBA job submitted.");
+						      }
+						  } else {
+							  return;
+						  }
+						}      
+						});
+					} catch (com.google.gwt.http.client.RequestException e) {
+						e.printStackTrace();
+					}
 			}
 		});
-
+		
 		final VerticalPanel vPanel = new VerticalPanel();
-		String instruction = "Note:<br/>1) Please upload the data file for extracellular metabolites kinetics as shown in the sample file;<br/>2) Make sure the names of metabolites are consistant with those in the genome-scale FBA;<br/>3) The maximun number of time intervals allowed in dFBA is 10,000";
+		String instruction = "Note: 1) Please upload the data file for extracellular metabolites kinetics as shown in the sample file; 2) Make sure the names of metabolites are consistant with those in the genome-scale FBA;<br/>3) The maximun number of time intervals allowed in dFBA is 10,000";
 		final Label instructiondFBA = new Label(instruction);
 
-		// Add a label
-		// vPanel.add(new HTML());
 		vPanel.add(instructiondFBA);
 		
-		
-		// Add a file upload widget
 		final FileUpload fileUpload = new FileUpload();
 		fileUpload.setName("uploadFormElement");
 		final FormPanel fPanel = new FormPanel();
@@ -924,7 +926,7 @@ public class RightPanel {
 				url.append("?obj_type=" + obj.getSelectedIndex());
 				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
 					try {
-						Request request = builder.sendRequest(null, new RequestCallback() {
+						builder.sendRequest(null, new RequestCallback() {
 						public void onError(Request request, Throwable exception) {
 						   return;
 						}
@@ -972,41 +974,36 @@ public class RightPanel {
 
 		topTabSet.setTabBarPosition(Side.TOP);
 		topTabSet.setTabBarAlign(Side.LEFT);
-		topTabSet.setWidth(400);
-		topTabSet.setHeight(200);
-
-		topTabSet.setSize("550px", "400px");
+		topTabSet.setSize("55%", "75%");
+		
 		final Tab introductionTab = new Tab("Introduction");
-		final Tab functionTab = new Tab("Functions");
-		final Tab flowchartTab = new Tab("Flowchart");
-		final Tab demoTab = new Tab("Demo");
-		final Tab helpTab = new Tab("Help");
-		// Tab module
-		String introductionContent = " Here is what we will input in the Introduciton tab";
-		String functionContent = "Here is what we will input in the Function tab";
-		String flowchartContent = "Here is what we will input in the Flowchart tab";
-		String demoContent = "Here is what we will input in the Demo tab";
-		String helpContent = "Here is what we will input in the Help tab";
-
-		com.smartgwt.client.widgets.Label introductionForm = new com.smartgwt.client.widgets.Label(
-				introductionContent);
-		com.smartgwt.client.widgets.Label functionForm = new com.smartgwt.client.widgets.Label(
-				functionContent);
-		com.smartgwt.client.widgets.Label flowchartForm = new com.smartgwt.client.widgets.Label(
-				flowchartContent);
-		com.smartgwt.client.widgets.Label demoForm = new com.smartgwt.client.widgets.Label(
-				demoContent);
-		com.smartgwt.client.widgets.Label helpForm = new com.smartgwt.client.widgets.Label(
-				helpContent);
-
-		introductionTab.setPane(introductionForm);
-		functionTab.setPane(functionForm);
-		flowchartTab.setPane(flowchartForm);
-		demoTab.setPane(demoForm);
-		helpTab.setPane(helpForm);
+		final Tab flowchartTab = new Tab("Archetecture");
+		final Tab demoTab = new Tab("Demo video");
+		final Tab helpTab = new Tab("FAQ");
+		
+		HTMLPane introHTML = new HTMLPane();
+		introHTML.setIFrameURL("http://tanglab.engineering.wustl.edu/media/intro.html");
+		introHTML.setScrollbarSize(0);
+		
+		
+		HTMLPane archHTML = new HTMLPane();
+		archHTML.setIFrameURL("http://tanglab.engineering.wustl.edu/media/arch.html");
+		archHTML.setScrollbarSize(0);
+		
+		HTMLPane demoHTML = new HTMLPane();
+		demoHTML.setIFrameURL("http://tanglab.engineering.wustl.edu/media/demo.html");
+		demoHTML.setScrollbarSize(0);
+		
+		HTMLPane faqHTML = new HTMLPane();
+		faqHTML.setIFrameURL("http://tanglab.engineering.wustl.edu/media/faq.html");
+		faqHTML.setScrollbarSize(0);
+		
+		introductionTab.setPane(introHTML);
+		flowchartTab.setPane(archHTML);
+		demoTab.setPane(demoHTML);
+		helpTab.setPane(faqHTML);
 
 		topTabSet.addTab(introductionTab);
-		topTabSet.addTab(functionTab);
 		topTabSet.addTab(flowchartTab);
 		topTabSet.addTab(demoTab);
 		topTabSet.addTab(helpTab);
@@ -1270,7 +1267,7 @@ public class RightPanel {
 		final CheckBox agreement = new CheckBox();
 		// TOS
 		agreement
-				.setHTML("I have read and agree to the <a href=\"http://tanglab.engineering.wustl.edu/static/tos.html\" target=\"_blank\">Term of Use</a>");
+				.setHTML("I have read and agree to the <a href=\"http://tanglab.engineering.wustl.edu/media/tos.html\" target=\"_blank\">Term of Use</a>");
 
 		final Button registerPopup = new Button("Register");
 
