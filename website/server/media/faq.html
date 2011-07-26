@@ -1,0 +1,122 @@
+<h2> FAQ </h2>
+
+<h3> Background </h3>
+
+<b>1. What is MicrobesFlux?</b>
+<p>
+MicrobesFlux is a web platform for 1) genome-scale metabolic model reconstruction and 2) constraint based modeling in both metabolic steady and non-steady states. It is free, open-source software developed based on KEGG database (KGML and LIGAND) and empowered by cloud computation.
+</p>
+
+<b>2. Why do we need genome-scale metabolic model reconstruction?</b>
+
+<p>
+The motivations for genome-scale metabolic model reconstruction come from two emerging areas: systems biology and metabolic engineering.</p>
+
+<p> In systems biology, one challenge is that the biological models, e.g. genome-scale metabolic models, cannot always be reflective of the complex character of biology systems. One of the reasons for this loophole is the genome misannotation (i.e. the pathway is active but the corresponding genes are not annotated). In order to bridge the gap between genome annotation and microbial metabolism, the genome-scale metabolic models need to be reconstructed.</p>
+
+<p> In metabolic engineering, biological systems are often genetically manipulated (e.g. knock-out pathways and introduce heterologous pathways) to increase the yield of products. The topology of metabolic networks in the engineered systems (e.g. mutants) is normally different from the original biological system (e.g. wide-type strain). In order to model the metabolic behaviors of the engineered biology systems, the metabolic models need to be reconstructed.</p>
+
+<b>3. Why do we need constraint-based modeling?</b>
+
+<p>
+Constraint-based modeling, represented by flux balance analysis (FBA), is a powerful tool in systems biology and metabolic engineering. In systems biology, FBA can quantitatively predict the cell metabolism in genome scale under various experimental conditions. Against with experimental observations, assumptions in modeling of cell metabolism can be easily tested by FBA.
+</p>
+<p>
+In metabolic engineering, FBA can help in silico rational design of desired mutants for highest production yield. Meanwhile, the kinetics of intracellular metabolism of microbial systems that are often encountered industrial bioprocess can be addressed by dynamic FBA (dFBA).</p>
+
+<b>4. Why do we need MicrobesFlux?</b>
+<p>
+MicrobesFlux implements both genome-scale metabolic model reconstruction and constraint-based modeling. In addition, MicrobesFlux is developed with some unique features.
+</p>
+<p>In genome-scale metabolic model reconstruction, MicrobesFlux implements a user-friendly interface for customized reconstruction of the metabolic model. Such user-defined model reconstruction approach extricates biologists from programming and makes the best use of their knowledge and experience in building a physiologically meaningful model.
+</p>
+<p>In constraint-based modeling, MicrobesFlux uses static optimization approach of dFBA for dynamic metabolism modeling. By simply uploading the user-defined data file of inflow and outflow fluxes at each time interval (assumed as pseudo stead state), the dynamic metabolic flux distributions in as many as 10,000 time intervals can be solved at once.</p>
+
+<h3> How to use MicrobesFlux </h3>
+
+<b>5. How can I use MicrobesFlux? </b>
+
+A demo about using MicrobesFlux can be found in the "Demo video" tab. In brief, there are three steps to use MicrobesFlux, 
+<ul>
+<li>Step 1: Start from a "New model" and choose the microorganism of interests.</li>
+
+<li>Step 2: Genome-scale reconstruction in "Metabolic Pathways" via (i) knocking-out pathways, (ii) inputting biomass composition, (iii) including transport pathways (i.e. inflow and outflow), and (iv) introducing heterologous pathways.</li>
+
+<li>Step 3: Constraint-based modeling of the reconstructed metabolic model in "Optimization". Both FBA and dFBA can be achieved in this step.</li>
+</ul>
+
+
+<b>6. Can I use MicrobesFlux without login? </b>
+<p>
+Yes. Everyone can use MicrobesFlux, no matter login or not. If you login, you can save your half-way reconstructed genome-scale model in MicrobesFlux.
+2. Why cannot I find the interested microorganism in MicrobesFlux?
+MicrobesFlux is free software developed by two volunteers (Mr. Xueyang Feng and Mr. You Xu) without funding support. It is developed based on <a href="www.genome.jp/kegg/">KEGG database</a>.  </p>
+
+<p>
+Note: since July 1, 2011, KEGG database is charged for academic use outside Japan. Therefore, only the microbes and LIGAND database before July 1, 2011 are included in MicrobesFlux.
+</p>
+
+<b>7. Why my results do not make any sense? </b>
+
+<p>
+Reasons for a failed model are diverse and user-specific. The common problems for an invalid model are 1) certain gaps between genome annotation and real microbial metabolism have not yet been filled. For example, some orphan pathways (e.g. A &rarr; B but B &rarr; nothing) presents in the model, without referring to any inflow/outflow; 2) the biomass production are not included in the reconstructed model; 3) some key pathways are knocked out.
+</p>
+
+<b>8. Why SBML from MicrobesFlux cannot be read by other software, e.g. COBRA? </b>
+
+<p>
+In MicrobesFlux, we output SBML in latest version (level 3), while some software like COBRA still uses the older version of SBML (level 2). We are currently incorporating a new feature that will provide a SBML format compatible with COBRA's.</p>
+
+<b>9. How long does it take to solve a FBA/dFBA problem?</b>
+<p>
+For a well-defined FBA problem, it normally takes 0.5~5 min from submitting a AMPL formatted model to generating complete solutions, depending on how many people are using MicrobesFlux at the same time. For a well-defined dFBA problem, it will take longer time since multiple FBA problems are generated in one dFBA problem. The approximate solving time for a dFBA problem is 1~15 min.
+</p>
+
+<b>10. Where does the genome and pathway information come from?</b>
+
+<p>The statistics of genome and pathway information come from the KGML files of corresponding species.</p>
+
+<b>11. Why do I get the message "Invalid compound name(s)" in adding pathways?</b>
+<p> Not all valid names of compounds are included in MicrobesFlux. A complete list of compounds used in MicrobesFlux can be found <a href="http://tanglab.engineering.wustl.edu/static/compound.txt">here</a>. </p>
+
+
+<b>12. Where can I report bugs or submit patches?</b>
+
+<p>MicrobesFlux is an open-source project hosted on Google code. You can submit bug reports or suggestions using Google Code's <a href="http://code.google.com/p/kegg-dfba/">issue tracking system</a>. 
+</p>
+
+<b>13. How can I reach you? </b>
+<p>
+Please feel free to contact anyone listed below:<br/>
+<br/>
+<br/>
+<strong>Xueyang Feng, Ph.D. candidate</strong><br/>
+Dept. of Energy, Environmental &amp; Chemical Engineering,<br/>
+Washington University in St. Louis<br/>
+fengx@seas.wustl.edu<br/>
+Tel: 314-935-6125<br/>
+<br/>
+<br/>
+<strong>You Xu, Ph.D. candidate</strong><br/>
+Dept. of Computer Science &amp; Engineering,<br/>
+Washington University in St. Louis<br/>
+youxu@wustl.edu<br/>
+Tel: 314-935-9187<br/>
+<br/>
+<br/>
+<strong>Yixin Chen, Associate Professor</strong><br/>
+Dept. of Computer Science &amp; Engineering,<br/>
+Washington University in St. Louis<br/>
+ychen25@wustl.edu<br/>
+Tel: 314-935-7528<br/>
+<br/>
+<br/>
+<strong>Yinjie Tang, Assistant Professor</strong><br/>
+Dept. of Energy, Environmental &amp; Chemical Engineering,<br/>
+Washington University in St. Louis<br/>
+yinjie.tang@seas.wustl.edu<br/>
+Tel: 314-935-3441<br/>
+</p>
+
+
+

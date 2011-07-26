@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+		<!--                                                               -->
+		<!-- Consider inlining CSS to reduce the number of requested files -->
+		<!--                                                               -->
+		<link type="text/css" rel="stylesheet" href="MicrobesFlux.css">
+	
+		<!--                                           -->
+		<!-- Any title is fine                         -->
+		<!--                                           -->
+		<title>Welcome to MicrobesFlux</title>
+
+		<!--                                           -->
+		<!-- This script loads your compiled module.   -->
+		<!-- If you add any GWT meta tags, they must   -->
+		<!-- be added before this line.                -->
+		<!--                                           -->
+		<script> var isomorphicDir = "edu.wustl.keggproject.MicrobesFlux/sc/"; </script>
+		<script language="javascript" src="edu.wustl.keggproject.MicrobesFlux/edu.wustl.keggproject.MicrobesFlux.nocache.js"></script>
+		
+		<script src="https://www.google.com/jsapi?key=ABQIAAAAj1VmvxnOa7jZyOXrKccQ0xT8ROPdetejvKsGZQLNg80vL8rU7BTBOc5keDu_xc4bh2moP0Nky4HC3Q" type="text/javascript"></script>
+		
+		<script language="Javascript" type="text/javascript">
+    	//<![CDATA[
+	   	google.load("jquery", "1.6.2");
+	    //]]>
+    	</script>
+	<script language="JavaScript" src="testData.js"></script>
+	<script language="JavaScript">
+
+	function callback(item) {
+	}
+	
+	jQuery(function() {
+		$('input#suggestBox').jsonSuggest(testData.countryCodes, {onSelect:callback});
+	};
+	
+	</script>
+		
+	</head>
+
+	<!--                                           -->
+	<!-- The body can have arbitrary html, or      -->
+	<!-- we leave the body empty because we want   -->
+	<!-- to create a completely dynamic ui         -->
+	<!--                                           -->
+	<body>
+
+		<!-- OPTIONAL: include this if you want history support -->
+		<iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe>
+
+	</body>
+</html>
+
