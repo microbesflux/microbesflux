@@ -45,6 +45,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -237,7 +238,7 @@ public class RightPanel {
 	public void ChangeToPathway() {
 		sp.clear();
 		final ListGrid pathwayModule = new ListGrid();
-		pathwayModule.setWidth(400);
+		pathwayModule.setWidth(600);
 		pathwayModule.setHeight(500);
 		pathwayModule.setShowAllRecords(true);
 		pathwayModule.setDataSource(PathwayDS.getInstance());
@@ -635,8 +636,11 @@ public class RightPanel {
 		 * optimizationModule.setGroupByField("t");
 		 */
 		objectiveList.setDataSource(ObjectiveDS.getInstance());
+		objectiveList.setSize("600", "250");
+		
 		ListGridField reaction = new ListGridField("r");
 		ListGridField weight = new ListGridField("w");
+		
 		objectiveList.setFields(reaction, weight);
 		objectiveList.setAutoFetchData(true);
 		objectiveList.setShowResizeBar(true);
@@ -725,6 +729,8 @@ public class RightPanel {
 
 		// Linear constraint module
 		final ListGrid constraintList = new ListGrid();
+		constraintList.setSize("600", "250");
+		
 		constraintList.setDataSource(ConstraintDS.getInstance()); // data source
 																	// for
 																	// constrainList
@@ -742,6 +748,7 @@ public class RightPanel {
 		// Boundary module
 
 		final ListGrid boundaryList = new ListGrid();
+		boundaryList.setSize("600", "250");
 		final DynamicForm boundaryForm = new DynamicForm();
 
 		boundaryList.setDataSource(BoundaryDS.getInstance());
@@ -862,9 +869,11 @@ public class RightPanel {
 		});
 		
 		final VerticalPanel vPanel = new VerticalPanel();
-		String instruction = "Note: 1) Please upload the data file for extracellular metabolites kinetics as shown in the sample file; 2) Make sure the names of metabolites are consistant with those in the genome-scale FBA;<br/>3) The maximun number of time intervals allowed in dFBA is 10,000";
-		final Label instructiondFBA = new Label(instruction);
-
+		
+		String instruction = "<b>Note:</b> <br/> 1) Please upload the data file for extracellular metabolites kinetics as shown in the <a href=\"http://tanglab.engineering.wustl.edu/media/sample.txt\">sample file</a>; <br/> 2) Make sure the names of metabolites are consistant with those in the genome-scale FBA; <br/> 3) The maximun number of time intervals allowed in dFBA is 10,000";
+		
+		final HTML instructiondFBA = new HTML(instruction);
+		
 		vPanel.add(instructiondFBA);
 		
 		final FileUpload fileUpload = new FileUpload();
