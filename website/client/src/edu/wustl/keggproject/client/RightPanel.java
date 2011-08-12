@@ -515,7 +515,7 @@ public class RightPanel {
 				        	  buttonAdd.setEnabled(true);
 				          }
 				          else {
-				        	  Window.alert("Invalid compound name(s).");
+				        	  Window.alert("Invalid compound name(s). For a list of valid compound names used by MicrobesFlux, visit http://tanglab.engineering.wustl.edu/media/compound.txt.");
 				        	  buttonAdd.setEnabled(false);
 				          }
 				      } else {
