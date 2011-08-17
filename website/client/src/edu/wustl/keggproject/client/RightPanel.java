@@ -988,7 +988,8 @@ public class RightPanel {
 		final Tab introductionTab = new Tab("Introduction");
 		final Tab flowchartTab = new Tab("Archetecture");
 		final Tab demoTab = new Tab("Demo video");
-		final Tab helpTab = new Tab("FAQ");
+		final Tab faqTab = new Tab("FAQ");
+		final Tab futureTab = new Tab("Future Work");
 		
 		HTMLPane introHTML = new HTMLPane();
 		introHTML.setIFrameURL("http://tanglab.engineering.wustl.edu/media/intro.html");
@@ -1007,15 +1008,23 @@ public class RightPanel {
 		faqHTML.setIFrameURL("http://tanglab.engineering.wustl.edu/media/faq.html");
 		faqHTML.setScrollbarSize(0);
 		
+		HTMLPane futureHTML = new HTMLPane();
+		futureHTML.setIFrameURL("http://tanglab.engineering.wustl.edu/media/future.html");
+		futureHTML.setScrollbarSize(0);
+		
 		introductionTab.setPane(introHTML);
 		flowchartTab.setPane(archHTML);
 		demoTab.setPane(demoHTML);
-		helpTab.setPane(faqHTML);
+		faqTab.setPane(faqHTML);
+		futureTab.setPane(futureHTML);
+		
 
 		topTabSet.addTab(introductionTab);
 		topTabSet.addTab(flowchartTab);
 		topTabSet.addTab(demoTab);
-		topTabSet.addTab(helpTab);
+		topTabSet.addTab(faqTab);
+		topTabSet.addTab(futureTab);
+		
 		sp.setWidget(topTabSet);
 	}
 
