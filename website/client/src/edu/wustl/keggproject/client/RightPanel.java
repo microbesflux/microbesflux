@@ -515,7 +515,12 @@ public class RightPanel {
 				        	  buttonAdd.setEnabled(true);
 				          }
 				          else {
-				        	  Window.alert("Invalid compound name(s). For a list of valid compound names used by MicrobesFlux, visit http://tanglab.engineering.wustl.edu/media/compound.txt.");
+				        	  Window.alert("Invalid compound name(s). " +
+				        	  		"MicrobesFlux only accepts a subset of KEGG " +
+				        	  		"compound names. "+
+				        			"For a list of valid compound names used by " +
+				        	  		"MicrobesFlux, visit " +
+				        	  		"http://tanglab.engineering.wustl.edu/media/valid_compounds.html");
 				        	  buttonAdd.setEnabled(false);
 				          }
 				      } else {
