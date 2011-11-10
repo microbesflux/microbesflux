@@ -1,36 +1,22 @@
-# from django.conf.urls.defaults import *
-
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-
 ADMINS = (
     ('Eric Xu', 'youxu@wustl.edu'),
 )
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'tanglab_web'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'tanglab_django'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'YXtl817##'         # Not used with sqlite3.
-DATABASE_HOST = 'myresdb.seas.wustl.edu'             # Set to empty string for localhost. Not used with sqlite3.
+# CHANGE THE LINE BELOW
+DATABASE_ENGINE = 'mysql'           
+DATABASE_NAME = 'your_db_name'             # Or path to database file if using sqlite3.
+DATABASE_USER = 'your_db_user'             # Not used with sqlite3.
+DATABASE_PASSWORD = 'your_db_pass'         # Not used with sqlite3.
+DATABASE_HOST = 'your_db_host'             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-# Local time zone for this installation. Choices can be found here:
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-# although not all choices may be available on all operating systems.
-# If running in a Windows environment this must be set to the same as your
-# system time zone.
 TIME_ZONE = 'America/Chicago'
 
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
 SITE_ID = 1
-
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
 USE_I18N = True
 
 # Absolute path to the directory that holds media.
@@ -49,7 +35,9 @@ MEDIA_ROOT = '/research-www/engineering/tanglab/flux/temp/'
 ADMIN_MEDIA_PREFIX = '/media/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = ')%642r5buxlz$iuxwej)=5(vi871ileqdv$u+q3tffug!@%-q$'
+
+# CHANGE THE LINE BELOW
+SECRET_KEY = 'your_secrt_key'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -82,5 +70,6 @@ INSTALLED_APPS = (
 )
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+# CHANGE THE LINE BELOW
 SESSION_FILE_PATH = '/research-www/engineering/tanglab/flux/temp/'
 LOGIN_URL = '/'
