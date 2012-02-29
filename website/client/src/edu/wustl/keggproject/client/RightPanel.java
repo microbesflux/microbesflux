@@ -908,10 +908,15 @@ public class RightPanel {
 				final Configuration conf = ConfigurationFactory.getConfiguration();
 				// content = """Successfully Uploaded. \n File key is """ + newkey
 				String temp = event.getResults();
-				String[] sarray = temp.split(" ");
-				String fileKey = sarray[sarray.length-1];
-				conf.setUploadFile(fileKey);
-				Window.alert("File Uploaded. File key is " + fileKey + ".");
+				if (temp.contains("Please check your file format")) {
+					Window.alert("Your file format does not match the model. Please check your file or checkout the sample file for examples.");
+				}
+				else {
+					String[] sarray = temp.split(" ");
+					String fileKey = sarray[sarray.length-1];
+					conf.setUploadFile(fileKey);
+					Window.alert("File uploaded succesfully. The file key is " + fileKey + ".");
+				}
 			}
 		});
 
@@ -950,7 +955,11 @@ public class RightPanel {
 						      if (response.getText().contains("New DFBA")) {
 						    	  Window.alert("DFBA job submitted.");
 						      }
+						      else {
+						    	  Window.alert("There was a problem with your uploaded data file, please check the format and upload again.");
+						      }
 						  } else {
+							  Window.alert("There was a problem with your uploaded data file, please check the format and upload again.");
 							  return;
 						  }
 						}      
