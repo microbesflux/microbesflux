@@ -152,9 +152,13 @@ public class RightPanel {
 		buttonRun.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				tempvalue = new String(collectionbox.getText());
+				if (!tempvalue.matches("^[a-zA-Z0-9]$")) {
+					Window.alert("Model name should only contains lettes and numbers.");
+					return;
+				}
 				tempemail = new String(emailbox.getText());
 				if (tempemail.length()==0) {
-					Window.alert("Please Enter a Valid Email Address");
+					Window.alert("Please Enter a valid email address");
 					return;
 				}
 				

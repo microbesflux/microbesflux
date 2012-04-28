@@ -74,6 +74,10 @@ public class LeftPanel {
 
 		newFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				if (!conf.getLogin()) {
+					Window.alert("You have to login first to create a new model.");
+					return;
+				}
 				if (conf.getCurrentCollection().length() > 0) {
 					boolean proceed = Window
 						.confirm("You are about to create a new model. Make sure to save all changes (if any) to your current model. Do you want to proceed? ");
@@ -87,7 +91,6 @@ public class LeftPanel {
 
 		loadFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-
 				if (conf.getLogin() == false) {
 					Window.alert("You have to login first to load existing models");
 					return;
@@ -108,7 +111,7 @@ public class LeftPanel {
 
 		saveFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if (conf.getLogin() == false) {
+				if (!conf.getLogin()) {
 					Window.alert("You have to login first to save existing models");
 					return;
 				}
@@ -119,7 +122,7 @@ public class LeftPanel {
 
 		saveFileAs.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				if (conf.getLogin() == false) {
+				if (!conf.getLogin()) {
 					Window.alert("You have to login first to save existing models");
 					return;
 				}
