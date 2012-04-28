@@ -75,7 +75,7 @@ public class LeftPanel {
 		newFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (!conf.getLogin()) {
-					Window.alert("You have to login first to create a new model.");
+					Window.alert("You have to log in to create a new model. You can create an account for free by clicking Register.");
 					return;
 				}
 				if (conf.getCurrentCollection().length() > 0) {

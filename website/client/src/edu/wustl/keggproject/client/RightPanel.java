@@ -1004,7 +1004,7 @@ public class RightPanel {
 		topTabSet.setSize("55%", "75%");
 		
 		final Tab introductionTab = new Tab("Introduction");
-		final Tab flowchartTab = new Tab("Archetecture");
+		final Tab flowchartTab = new Tab("Architecture");
 		final Tab demoTab = new Tab("Demo video");
 		final Tab faqTab = new Tab("FAQ");
 		final Tab futureTab = new Tab("Future Work");
