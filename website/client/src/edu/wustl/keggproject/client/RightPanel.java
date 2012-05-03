@@ -152,7 +152,7 @@ public class RightPanel {
 		buttonRun.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				tempvalue = new String(collectionbox.getText());
-				if (!tempvalue.matches("^[a-zA-Z0-9]$")) {
+				if (!tempvalue.matches("^[a-zA-Z0-9_]+$")) {
 					Window.alert("Model name should only contains lettes and numbers.");
 					return;
 				}
@@ -541,13 +541,17 @@ public class RightPanel {
 		
 		buttonAdd.setEnabled(false);
 		
+		final Anchor validList = new Anchor("List of valid compound names");
+		
 		gridPanel.setWidget(5, 1, buttonCheck);
 		gridPanel.setWidget(5, 2, buttonAdd);
+		gridPanel.setWidget(6, 0, validList);
+		validList.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				Window.open("http://tanglab.engineering.wustl.edu/media/valid_compounds.html", "Names", "");
+			}
+		});	
 		
-		
-		// gridPanel.setWidget(5, 1, buttonAdd);
-		// pathwayPanel.add(gridPanel);
-
 		pathwayPanel.add(pathwayAndSavePanel);		
 		pathwayPanel.add(checkForm);
 		
@@ -1300,15 +1304,15 @@ public class RightPanel {
 		userInformation.setWidget(8, 0, new Label("Country"));
 		userInformation.setWidget(8, 1, country);
 
-		final CheckBox agreement = new CheckBox();
+		// final CheckBox agreement = new CheckBox();
 		// TOS
-		agreement
-				.setHTML("I have read and agree to the <a href=\"http://tanglab.engineering.wustl.edu/media/tos.html\" target=\"_blank\">Term of Use</a>");
+		// agreement
+		//		.setHTML("I have read and agree to the <a href=\"http://tanglab.engineering.wustl.edu/media/tos.html\" target=\"_blank\">Term of Use</a>");
 
 		final Button registerPopup = new Button("Register");
 
-		registerPopup.setEnabled(false);
-
+		registerPopup.setEnabled(true);
+		/*
 		agreement.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (agreement.getValue()) {
@@ -1319,8 +1323,8 @@ public class RightPanel {
 
 			}
 		});
-
-		agreementGrid.setWidget(0, 0, agreement);
+		*/
+		// agreementGrid.setWidget(0, 0, agreement);
 		agreementGrid.setWidget(1, 0, registerPopup);
 
 		registerPanel.add(accountGrid);

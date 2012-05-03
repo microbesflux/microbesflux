@@ -75,6 +75,7 @@ public class LeftPanel {
 		newFile.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (!conf.getLogin()) {
+					// Window.
 					Window.alert("You have to log in to create a new model. You can create an account for free by clicking Register.");
 					return;
 				}
@@ -143,16 +144,28 @@ public class LeftPanel {
 		final Anchor optimizationInfo = new Anchor("Optimization");
 		genomeInfo.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				if (!conf.getLogin()) {
+					Window.alert("You have to log in and select a model first to view its genome info.");
+					return;
+				}
 				rp.changeToGenome();
 			}
 		});
 		pathwayInfo.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				if (!conf.getLogin()) {
+					Window.alert("You have to log in and select a model first to view its pathway info.");
+					return;
+				}
 				rp.ChangeToPathway();
 			}
 		});
 		optimizationInfo.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				if (!conf.getLogin()) {
+					Window.alert("You have to log in and select a model first to conduct optimization.");
+					return;
+				}
 				rp.ChangeToOptimization();
 			}
 		});

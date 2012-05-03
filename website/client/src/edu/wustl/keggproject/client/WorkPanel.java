@@ -120,7 +120,6 @@ import edu.wustl.keggproject.client.datasource.PathwayDS;
 		pathwayModule.setFields(ko, reac, reactants, arrow, products, pathway);
 
 		pathwayModule.setAutoFetchData(true);
-		// pathwayModule.setSortField("pathway");
 		pathwayModule.setGroupByField("pathway");
 		HorizontalPanel pathwayAndSavePanel = new HorizontalPanel();
 		pathwayAndSavePanel.add(pathwayModule);
@@ -167,7 +166,6 @@ import edu.wustl.keggproject.client.datasource.PathwayDS;
 								"pathway") + "<<<<");
 				if (pathwayModule.getSelectedRecord().getAttribute("pathway")
 						.equals("BIOMASS")) {
-					System.out.println("Herehehrehrhehre");
 					formitem[4].disable();
 				}
 
