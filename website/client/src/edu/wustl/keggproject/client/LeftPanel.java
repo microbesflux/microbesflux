@@ -276,7 +276,14 @@ public class LeftPanel {
 		leftPanel.add(filePanel, "Build/Load/Save a Model", false);
 		leftPanel.add(functionPanel, "Pathways & FBA", false);
 		leftPanel.add(accountPanel, "Account Management", false);
-
+		Label user_manual = new Label();
+		user_manual.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				Window.open("http://tanglab.engineering.wustl.edu/static/MicrobesFlux_User_Manual.pdf", "_blank", null);
+			}
+		});
+		leftPanel.add(user_manual);
+		
 		biggerLeftPanel.add(leftPanel);
 		// String htmlcode = 
 		// "<a href=\"http://tvshowpopularity.net\" target=\"blank\" ><img alt=\"tvshowpopularity.net\" hspace=\"0\" vspace=\"0\" border=\"0\" src=\"http://awesomemonitor.com/counter.php?id=953eba4341c2ae3b9d731130915c4874&theme=1c&digits=6&size=big&siteId=ctm_tp_c4\"/></a><noscript><br/><a href=\"http://tvshowpopularity.net\">Free Counter</a><br>The following text will not be seen after you upload your website, please keep it in order to retain your counter functionality <br> <a href=\"http://casino4fun.org\" target=\"_blank\">casino reviews</a></noscript>";
